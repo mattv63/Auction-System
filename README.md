@@ -1,2 +1,2 @@
 # CS1555AuctionProject
-CS1555 Auction Term Project 
+Pitt CS1555 Databae Management Systems Auction Term Project 
