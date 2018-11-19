@@ -101,7 +101,7 @@ IS
 BEGIN
         
     SELECT  c_date
-    INTO currdate
+    INTO currDate
     FROM ourSysDATE
     WHERE ROWNUM = 1
     ORDER BY c_date DESC;
@@ -123,7 +123,7 @@ for each row
 begin
   update product 
   set status = 'closed'
-  where status = 'in auction' and number_of_days <= :new.c_date;
+  where status = 'in auction' and start_date + number_of_days <= :new.c_date;
 end;
 /
 
