@@ -1,4 +1,5 @@
 
+
 --drop all tables
 DROP TABLE ourSysDATE CASCADE CONSTRAINTS;
 DROP TABLE Customer CASCADE CONSTRAINTS;
@@ -66,7 +67,6 @@ CREATE TABLE Bidlog
     CONSTRAINT Bidlog_PK PRIMARY KEY (bidsn),
     CONSTRAINT Bidlog_FK_auction_id FOREIGN KEY (auction_id) REFERENCES Product (auction_id),
     CONSTRAINT Bidlog_FK_bidder FOREIGN KEY (bidder) REFERENCES Customer (login)
-
 );
 
 CREATE TABLE Category

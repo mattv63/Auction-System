@@ -1,10 +1,9 @@
 --trigger, fucntions, procedures, etc
-
 CREATE OR REPLACE PROCEDURE proc_putProduct
 (
     pAuction_ID out int,
     pName in varchar2,
-    pDesciption in varchar2,
+    pDescription in varchar2,
     pSeller in varchar2,
     pMin_price in int,
     pNumber_of_days in int
@@ -17,9 +16,10 @@ begin
     
     select max(c_date) into pStart_date from ourSysDate;
     
-    insert into Product(auction_id, name, desciption, seller, start_date, min_price, number_of_days, status)
+    insert into Product(auction_id, name, description, seller, start_date, min_price, number_of_days, status)
     values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'in auction');
 end proc_putProduct;
+/
 
 -- When new bid is inserted, advances system time by five seconds.  
 CREATE OR REPLACE TRIGGER trig_bidTimeUpdate
@@ -126,5 +126,3 @@ begin
   where status = 'in auction' and start_date + number_of_days <= :new.c_date;
 end;
 /
-
-
