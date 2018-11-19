@@ -58,7 +58,7 @@ BEGIN
     
     SELECT COUNT(p.auction_id)
     INTO prodSold
-    FROM Product p, BelongsTo b
+    FROM Product p JOIN BelongsTo b ON p.auction_id = b.auction_id
     WHERE b.category = cat
     AND p.status = 'sold'
     AND p.sell_date >= add_months(currDate, -mon);
