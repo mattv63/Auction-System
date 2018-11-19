@@ -30,9 +30,9 @@ begin
     update ourSysDATE
     set c_date = to_date(new_date, 'DD-MON-YYYY/HH12:MI:SS:AM');
 end;
+/
 
 CREATE OR REPLACE TRIGGER trig_updateHighBid
--- to do
 after insert on bidlog
 for each row
 begin
@@ -51,7 +51,7 @@ IS
     prodSold INT;
 BEGIN
     SELECT c_date
-    INTO currdate
+    INTO currDate
     FROM ourSysDATE
     WHERE ROWNUM = 1
     ORDER BY c_date DESC;
@@ -75,7 +75,7 @@ IS
     numBids INT;
 BEGIN
     SELECT  c_date
-    INTO currdate
+    INTO currDate
     FROM ourSysDATE
     WHERE ROWNUM = 1
     ORDER BY c_date DESC;
@@ -118,13 +118,12 @@ END;
 
 
 CREATE OR REPLACE TRIGGER trig_closeAuctions
--- to do
-after update of current_time on system_time
+after update of c_date on ourSysDATE
 for each row
 begin
   update product 
   set status = 'closed'
-  where status = 'underauction' and number_of_days <= :new.current_time;
+  where status = 'in auction' and number_of_days <= :new.c_date;
 end;
 /
 
