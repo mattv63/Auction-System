@@ -1,7 +1,5 @@
 --insert sample records that test triggers and constraints
 
---insert sample records that test triggers and constraints
-
 INSERT INTO ourSysDATE VALUES(SYSDATE);
 
 INSERT INTO customer VALUES('aaaa', '1111', 'Anthony B', null, null);

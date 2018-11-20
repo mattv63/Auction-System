@@ -1,4 +1,6 @@
 --trigger, fucntions, procedures, etc
+
+-- Procedure to add a new product to the DB
 CREATE OR REPLACE PROCEDURE proc_putProduct
 (
     pAuction_ID out int,
@@ -32,6 +34,7 @@ begin
 end;
 /
 
+-- trigger to update the highest bid in the BidLog
 CREATE OR REPLACE TRIGGER trig_updateHighBid
 after insert on bidlog
 for each row
@@ -116,7 +119,7 @@ BEGIN
 END;
 /
 
-
+-- sets status of an auction to closed when the system date goes past the number_of_days for the auction
 CREATE OR REPLACE TRIGGER trig_closeAuctions
 after update of c_date on ourSysDATE
 for each row
