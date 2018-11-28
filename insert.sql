@@ -16,9 +16,9 @@ INSERT INTO product VALUES(5,'p5',null, 'cccc', SYSDATE, 10, 20, 'sold', 'bbbb',
 
 INSERT INTO bidlog VALUES(1,1,'cccc',SYSDATE, 40);
 INSERT INTO bidlog VALUES(2,1,'bbbb',SYSDATE, 50);
-INSERT INTO bidlog VALUES(3,2,'bbbb',SYSDATE, 40);
+INSERT INTO bidlog VALUES(3,2,'bbbb',SYSDATE, 60);
 INSERT INTO bidlog VALUES(4,2,'cccc',SYSDATE, 50);
-INSERT INTO bidlog VALUES(5,3,'aaaa',SYSDATE, 40);
+INSERT INTO bidlog VALUES(5,3,'aaaa',SYSDATE, 60);
 INSERT INTO bidlog VALUES(6,3,'cccc',SYSDATE, 50);
 INSERT INTO bidlog VALUES(7,4,'cccc',SYSDATE, 40);
 INSERT INTO bidlog VALUES(8,4,'aaaa',SYSDATE, 50);
@@ -38,4 +38,8 @@ INSERT INTO belongsto VALUES(4,'cat2');
 INSERT INTO belongsto VALUES(5,'cat3');
 
 COMMIT;
+
+select * from product;
+
+commit;
 

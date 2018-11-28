@@ -12,14 +12,19 @@ CREATE OR REPLACE PROCEDURE proc_putProduct
 )
 is
     pStart_date date;
+    pSell_date date;
 begin
     select max(auction_ID) into pAuction_ID from Product;
     pAuction_ID := pAuction_ID + 1;
     
     select max(c_date) into pStart_date from ourSysDate;
     
-    insert into Product(auction_id, name, description, seller, start_date, min_price, number_of_days, status)
-    values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'in auction');
+    pSell_date := pStart_date + pNumber_of_days; -- added so sell date will be end of auction date
+    
+    insert into Product(auction_id, name, description, seller, start_date, min_price, number_of_days, status, buyer, sell_date)
+    values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'in auction', null, pSell_date);
+    
+    
 end proc_putProduct;
 /
 
@@ -34,7 +39,7 @@ begin
 end;
 /
 
--- trigger to update the highest bid in the BidLog
+-- trigger to update the highest bid in the Product
 CREATE OR REPLACE TRIGGER trig_updateHighBid
 after insert on bidlog
 for each row

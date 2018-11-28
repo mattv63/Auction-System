@@ -51,7 +51,8 @@ CREATE TABLE Product
     amount INT,
     CONSTRAINT Product_PK PRIMARY KEY (auction_id),
     CONSTRAINT Product_FK_seller FOREIGN KEY (seller) REFERENCES Customer (login),
-    CONSTRAINT Product_FK_buyer FOREIGN KEY (buyer) REFERENCES Customer (login)
+    CONSTRAINT Product_FK_buyer FOREIGN KEY (buyer) REFERENCES Customer (login),
+    CONSTRAINT Product_status CHECK (status = 'under auction' OR status = 'sold' OR status = 'withdrawn' OR status = 'closed')
 );
 
 CREATE TABLE Bidlog
