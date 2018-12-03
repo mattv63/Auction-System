@@ -7,10 +7,7 @@ import java.util.*;
 import java.io.*;
 import java.sql.*;
 import java.text.*;
-<<<<<<< HEAD
 import oracle.sql.*;
-=======
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
 
 public class MyAuction
 {
@@ -164,11 +161,7 @@ public class MyAuction
       {
         System.out.println("\nBid on Product");
         placeBid();
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
       }
       else if (choice == 5)
       {
@@ -188,7 +181,6 @@ public class MyAuction
     }
   }
 
-<<<<<<< HEAD
   public void auction_product(){
 
     // Get name and description of product
@@ -273,6 +265,7 @@ public class MyAuction
 
   }
 
+  // search for product
   public void search_products(){
     System.out.println("Search for up to two keywords. Separate words by a space");
     String[] keywords = getChoice().split("\\s");
@@ -436,20 +429,13 @@ public class MyAuction
 
   }
 
-=======
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
   public void makeSuggestion() {
     try {
       Statement st;
       ResultSet suggestions;
       st = dbcon.createStatement();
-<<<<<<< HEAD
       //query to get back product id, name, description, and highest bid
       //for products that people who have bid on the same items as current user
-=======
-      //query to get back product id, name, description, and highest bid 
-      //for products that people who have bid on the same items as current user 
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
       //have also bid on
       suggestions = st.executeQuery("select product.auction_id, product.name, product.description, product.amount from (" +
 				"select friends.bidder, bids.auction_id from (select distinct bidder from bidlog b1 where not exists (" +
@@ -459,11 +445,7 @@ public class MyAuction
 				"join product p on bids.auction_id = p.auction_id where bids.auction_id not in (select distinct auction_id from bidlog " +
 				"where bidder = '" + currentUser + "') and p.status = 'underauction') t1 join product on t1.auction_id = product.auction_id " +
 				"group by product.auction_id, product.name, product.description, product.amount order by count(bidder) desc");
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
       if (suggestions == null) {
         System.out.println("There were no suggestions found for you");
       }
@@ -484,11 +466,7 @@ public class MyAuction
       System.exit(0);
     }
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
   public void sellProductSetup() {
     try {
       ResultSet closedAuctions;
@@ -502,21 +480,13 @@ public class MyAuction
       else {
         List<Integer> id = new ArrayList<Integer>();
         List<String> product = new ArrayList<String>();
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
         //store the id and a display string for each product
         while (closedAuctions.next()) {
           id.add(closedAuctions.getInt(1));
           product.add(closedAuctions.getString(2) + " >> ID: " + closedAuctions.getInt(1));
         }
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
         //get which number of the product to sell
         System.out.println("Your closed auctions:");
         for (int i = 1; i <= product.size(); i++) {
@@ -524,11 +494,7 @@ public class MyAuction
         }
         System.out.println("Enter number of product you'd like to sell");
         String str = getChoice();
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
         int a_id = id.get(Integer.parseInt(str) - 1);
         sellProduct(a_id);
       }
@@ -538,11 +504,7 @@ public class MyAuction
       System.exit(0);
     }
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
   //method actually updates the DB when a product is sold
   public void sellProduct(int a_id) {
     try {
@@ -558,26 +520,15 @@ public class MyAuction
         int bidNum = 1;
         if (bids == 1)
           bidNum = 1;
-<<<<<<< HEAD
         else
           bidNum = 2;
         st = dbcon.createStatement();
         ResultSet priceR = st.executeQuery("select amount from (select amount, rownum as rn from " +
-=======
-        else 
-          bidNum = 2;
-        st = dbcon.createStatement();
-        ResultSet priceR = st.executeQuery("select amount from (select amount, rownum as rn from " + 
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
           "(select amount from bidlog where auction_id = " + a_id + " " +
 					"order by bid_time desc) where rownum <= 2) where rn = " + bidNum);
         priceR.next();
         int price = priceR.getInt(1);
-<<<<<<< HEAD
 
-=======
-        
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
         System.out.println("Would you like to sell your product for $" + price + "?");
         System.out.println("1. Sell Product");
         System.out.println("2. Withdraw Product");
@@ -586,15 +537,9 @@ public class MyAuction
         if (choice == 1) {
           //update product table to set status to sold and sell amount to highest bid
           st = dbcon.createStatement();
-<<<<<<< HEAD
           st.executeQuery("update product set status = 'sold', buyer = (select * from " +
             "(select bidder from bidlog where auction_id = " + a_id + " " +
 						"order by bid_time desc) where rownum <= 1), sell_date = (select my_time from sys_time)," +
-=======
-          st.executeQuery("update product set status = 'sold', buyer = (select * from " + 
-            "(select bidder from bidlog where auction_id = " + a_id + " " +
-						"order by bid_time desc) where rownum <= 1), sell_date = (select my_time from sys_time)," + 
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
             " amount = " + price + " where auction_id = " + a_id);
           System.out.println("Sold Product " + a_id + " for $" + price);
         }
@@ -617,11 +562,7 @@ public class MyAuction
       System.exit(0);
     }
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
   public void placeBid() {
     System.out.println("\nEnter Auction ID");
     String str = getChoice();
@@ -629,52 +570,31 @@ public class MyAuction
     System.out.println("\nEnter bid amount");
     str = getChoice();
     int bid = Integer.parseInt(str);
-<<<<<<< HEAD
 
-=======
-    
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
     try {
       //lock table for inserts on bidlog
       dbcon.setAutoCommit(false);
 			Statement locking = dbcon.createStatement();
 			locking.execute("lock table bidlog in share row exclusive mode");
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
       //insert new row into bidlog
       PreparedStatement s = dbcon.prepareStatement("insert into bidlog values(1, ?, ?, (SELECT c_date FROM ourSysDATE), ?)");
       s.setInt(1, a_id);
       s.setString(2, currentUser);
       s.setInt(3, bid);
       s.executeQuery();
-<<<<<<< HEAD
 
       dbcon.commit();
       dbcon.setAutoCommit(true);
       System.out.println("\nBid successful!") ;
 
 
-=======
-      
-      dbcon.commit();
-      dbcon.setAutoCommit(true);
-      System.out.println("\nBid successful!") ;
-      
-      
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
     } catch (SQLException e) {
       System.out.println("SQLException");
       System.exit(0);
     }
   }
-<<<<<<< HEAD
 
-=======
-  
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
   //gets user input
   public String getChoice()
   {
@@ -826,7 +746,6 @@ public class MyAuction
     String pass = getChoice();
 
     try
-<<<<<<< HEAD
     {
       if (reg == 1)
       {
@@ -1165,346 +1084,6 @@ public class MyAuction
     }
   }
 
-=======
-    {
-      if (reg == 1)
-      {
-        boolean valid = false;
-        ResultSet result;
-        Statement st;
-        PreparedStatement pst;
-        int count = 0;
-
-        while (!valid)
-        {
-          count = 0;
-          //gets all of the usernames in the db
-          st = dbcon.createStatement();
-          result = st.executeQuery("SELECT login FROM Administrator");
-
-          while(result.next())
-          {
-            String un = result.getString("login");
-            if(user.equals(un))
-            {
-              count ++;
-            }
-          }
-          if (count > 0)
-          {
-            System.out.println("Username already in use, please try another.");
-            System.out.print("Username: ");
-            user = getChoice();
-            valid = false;
-          }
-          else if (count == 0)
-          {
-            valid = true;
-          }
-        }
-        pst = dbcon.prepareStatement("INSERT INTO Administrator VALUES(?, ?, ?, ?, ?)");
-        pst.setString(1, user);
-        pst.setString(2, pass);
-        pst.setString(3, name);
-        pst.setString(4, addr);
-        pst.setString(5, eaddr);
-        result = pst.executeQuery();
-      }
-      else if (reg == 2)
-      {
-        boolean valid = false;
-        ResultSet result;
-        Statement st;
-        PreparedStatement pst;
-        int count = 0;
-
-        while (!valid)
-        {
-          count = 0;
-          //gets all of the usernames in the db
-          st = dbcon.createStatement();
-          result = st.executeQuery("SELECT login FROM Customer");
-
-          while(result.next())
-          {
-            String un = result.getString("login");
-            if(user.equals(un))
-            {
-              count ++;
-            }
-          }
-          if (count > 0)
-          {
-            System.out.println("Username already in use, please try another.");
-            System.out.print("Username: ");
-            user = getChoice();
-            valid = false;
-          }
-          else if (count == 0)
-          {
-            valid = true;
-          }
-        }
-        pst = dbcon.prepareStatement("INSERT INTO Customer VALUES(?, ?, ?, ?, ?)");
-        pst.setString(1, user);
-        pst.setString(2, pass);
-        pst.setString(3, name);
-        pst.setString(4, addr);
-        pst.setString(5, eaddr);
-        result = pst.executeQuery();
-      }
-    }
-    catch (SQLException e)
-    {
-      System.out.println("SQLException");
-      System.exit(0);
-    }
-
-    System.out.println("Successfully added User");
-    menus(1);
-  }
-
-  public void updateSysdate()
-  {
-    boolean valid = false;
-    System.out.println("Please enter the new date (mm.dd/yyyy hh:mi:ss)");
-    String date = "";
-    String format = "mm.dd/yyyy hh:mm:ss";
-    DateFormat df = new SimpleDateFormat(format);
-    ResultSet result;
-    PreparedStatement pst;
-
-    while (!valid)
-    {
-      date = getChoice();
-      try
-      {
-        df.parse(date);
-        valid = true;
-      }
-      catch (ParseException e)
-      {
-        System.out.println("Incorrect date format");
-        System.out.println("Please enter the new date (mm.dd/yyyy hh:mi:ss)");
-        valid = false;
-      }
-    }
-
-    try
-    {
-      pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh:mi:ss'))");
-      pst.setString(1, date);
-      pst.executeUpdate();
-      System.out.println("System Date successfully updated");
-    }
-    catch (SQLException e)
-    {
-      System.out.println("SQLException");
-      System.exit(0);
-    }
-
-    menus(1);
-  }
-
-  public void prodStats()
-  {
-    System.out.println("1. Full Inventory\n2. Customer Inventory");
-    String str = getChoice();
-    int inv = Integer.parseInt(str);
-    while (true)
-    {
-      if (inv == 1 || inv == 2)
-      {
-        break;
-      }
-      else
-      {
-        System.out.println("Please enter a 1 for Full Inventory or 2 for Customer Inventory");
-        System.out.println("1. Full Inventory\n2. Customer Inventory");
-        str = getChoice();
-        inv = Integer.parseInt(str);
-      }
-    }
-    try
-    {
-      ResultSet result = null;
-      Statement st;
-      PreparedStatement pst;
-
-      if (inv == 1)
-      {
-        // full inventory
-        st = dbcon.createStatement();
-        result = st.executeQuery("SELECT p.name, p.status, b.amount AS highest_bid, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' UNION SELECT p.name, p.status, p.amount AS highest_bid, p.buyer FROM product p WHERE p.status = 'sold'");
-      }
-      else if (inv == 2)
-      {
-        //specific customer
-        System.out.println("Enter the Customer's username");
-        String seller = getChoice();
-        pst = dbcon.prepareStatement("SELECT p.name, p.status, b.amount AS highest_bid, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' AND p.seller = ? UNION SELECT p.name, p.status, p.amount AS highest_bid, p.buyer FROM product p WHERE p.status = 'sold' AND p.seller = ?");
-        pst.setString(1, seller);
-        pst.setString(2, seller);
-        result = pst.executeQuery();
-      }
-
-      //print results
-      System.out.print("PRODUCT NAME        ");
-      System.out.print("PRODUCT STATUS      ");
-      System.out.print("HIGHEST BID         ");
-      System.out.print("BIDDER/BUYER        ");
-      System.out.println("\n------------        --------------      -----------         ------------        ");
-      while (result.next())
-      {
-        System.out.printf("%-20s %-20s %-20s %-20s\n", result.getString(1), result.getString(2), result.getString(3), result.getString(4));
-      }
-
-      menus(1);
-    }
-    catch (SQLException e)
-    {
-      System.out.println("SQLException");
-      System.exit(0);
-    }
-  }
-
-  public void stats()
-  {
-    System.out.println("\nSelect option");
-    System.out.println("-------------");
-    System.out.println("1. Top Leaf Categories");
-    System.out.println("2. Top Root Categories");
-    System.out.println("3. Top Bidders");
-    System.out.println("4. Top Buyers");
-
-    //get input
-    String str = getChoice();
-    int choice = Integer.parseInt(str);
-
-    System.out.print("Number of Months to search: ");
-    str = getChoice();
-    int months = Integer.parseInt(str);
-    System.out.print("Number of Results: ");
-    str = getChoice();
-    int k = Integer.parseInt(str);
-
-    //select a category to view
-    if (choice == 1)
-    {
-      topLeaf(months, k);
-    }
-    else if (choice == 2)
-    {
-      topRoot(months, k);
-    }
-    else if (choice == 3)
-    {
-      topBid(months, k);
-    }
-    else if (choice == 4)
-    {
-      topBuy(months, k);
-    }
-  }
-
-  public void topLeaf(int months, int k)
-  {
-    try
-    {
-      PreparedStatement pst;
-      ResultSet result;
-
-      pst = dbcon.prepareStatement("SELECT * FROM (SELECT c.name, func_productcount(?, c.name) AS products FROM category c WHERE func_productcount(?, c.name) IS NOT NULL AND c.parent_category IS NOT NULL ORDER BY products desc) WHERE ROWNUM <= ?");
-      pst.setInt(1, months);
-      pst.setInt(2, months);
-      pst.setInt(3, k);
-      result = pst.executeQuery();
-
-      System.out.println("Top " + k + " Highest Volume Leaf Categories");
-      System.out.println("------------------------------------");
-      System.out.print("CATEGORY            ");
-      System.out.print("NUMBER OF PRODUCTS  ");
-      System.out.println("\n--------            ------------------    ");
-
-      while (result.next())
-      {
-        System.out.printf("%-20s%-20s\n", result.getString(1), result.getString(2));
-      }
-
-      menus(1);
-    }
-    catch (SQLException e)
-    {
-      System.out.println("SQLException");
-      System.exit(0);
-    }
-  }
-
-  public void topRoot(int months, int k)
-  {
-    try
-    {
-      PreparedStatement pst;
-      ResultSet result;
-
-      pst = dbcon.prepareStatement("SELECT * FROM (SELECT c.name, func_productcount(?, c.name) AS products FROM category c WHERE func_productcount(?, c.name) IS NOT NULL AND c.parent_category IS NULL ORDER BY products desc) WHERE ROWNUM <= ?");
-      pst.setInt(1, months);
-      pst.setInt(2, months);
-      pst.setInt(3, k);
-      result = pst.executeQuery();
-      System.out.println("Top " + k + " Highest Volume Root Categories");
-      System.out.println("------------------------------------");
-      System.out.print("CATEGORY            ");
-      System.out.print("NUMBER OF PRODUCTS  ");
-      System.out.println("\n--------            ------------------    ");
-      while (result.next())
-      {
-        System.out.printf("%-20s%-20s\n", result.getString(1), result.getString(2));
-      }
-
-      menus(1);
-
-    }
-    catch (SQLException e)
-    {
-      System.out.println("SQLException");
-      System.exit(0);
-    }
-  }
-
-  public void topBid(int months, int k)
-  {
-    try
-    {
-      PreparedStatement pst;
-      ResultSet result;
-
-      pst = dbcon.prepareStatement("SELECT * FROM (SELECT c.login, func_bidCount(?, c.login) AS bids FROM customer c WHERE func_bidCount(?, c.login) IS NOT NULL ORDER BY bids desc) WHERE ROWNUM <= ?");
-      pst.setInt(1, months);
-      pst.setInt(2, months);
-      pst.setInt(3, k);
-      result = pst.executeQuery();
-      System.out.println("Top " + k + " Most Active Bidders");
-      System.out.println("-------------------------");
-      System.out.print("USERNAME            ");
-      System.out.print("NUMBER OF BIDS      ");
-      System.out.println("\n--------            --------------        ");
-      while (result.next())
-      {
-        System.out.printf("%-20s%-20s\n", result.getString(1), result.getString(2));
-      }
-
-      menus(1);
-
-    }
-    catch (SQLException e)
-    {
-      System.out.println("SQLException");
-      System.exit(0);
-    }
-  }
-
->>>>>>> 2d11a8b2c15d3f008a06f42cdc77942ba02fb3ba
   public void topBuy(int months, int k)
   {
     try
