@@ -3,6 +3,7 @@
 --where categories will be collected upon insert of product
 create or replace type cat_array as table of varchar2(20); 
 /
+drop sequence seq1;
 
 -- Procedure to add a new product to the DB
 CREATE OR REPLACE PROCEDURE proc_putProduct
@@ -65,12 +66,12 @@ end;
 
 
 -- trigger to make new bidsn when row added to bidlog
-create sequence sequence1 start with 1 increment by 1 nomaxvalue;
+create sequence seq1 start with 1 increment by 1 nomaxvalue;
 CREATE OR REPLACE TRIGGER increment_bidsn
 before INSERT ON bidlog
 FOR EACH ROW
 BEGIN
-  select sequence1.NEXTVAL
+  select seq1.NEXTVAL
   into :new.bidsn
   from dual;
 END;
