@@ -36,3 +36,22 @@ Administrator:
   2. Enter 1, 2, 3 or 4 to view the corresponding stats
   3. The user will be prompted to enter a number of months and a search results limit
   4. The statistics will then be displayed
+
+User:
+  Browse:
+    1. Select 1 from the User menu
+    2. Enter the number that corresponds with the parent category
+    3. Enter the number the corresponds with the leaf category
+    4. That products that belong to the category will be displayed
+    
+   Search:
+    1. Select 2 from the User menu
+    2. The user will be prompted to enter up the two keywords, separated by a space
+    3. Products that have a description that correspond with the keyword(s) will be displayed
+    4. If no products are found, the user will return to the main menu
+    
+   Auction:
+    1. Select 3 from the User menu
+    2. The user will be prompted to enter the product name, description, categories, days for auction and minimum price.
+    3. The user will be notified which categories were not accepted as valid ones
+    4. An auction id is returned to the user
