@@ -451,8 +451,8 @@ public class MyAuction
 				"join product p on bids.auction_id = p.auction_id where bids.auction_id not in (select distinct auction_id from bidlog " +
 				"where bidder = '" + currentUser + "') and p.status = 'underauction') t1 join product on t1.auction_id = product.auction_id " +
 				"group by product.auction_id, product.name, product.description, product.amount order by count(bidder) desc");
-
-      if (suggestions == null) {
+      System.out.println(suggestions.next());
+      if (!suggestions.next()) {
         System.out.println("There were no suggestions found for you");
       }
       else {
@@ -590,8 +590,11 @@ public class MyAuction
       s.setString(2, currentUser);
       s.setInt(3, bid);
       s.executeQuery();
+<<<<<<< HEAD
 
       System.out.println("here");
+=======
+>>>>>>> bf5ec355a2fdd3e689da1c2f5cdffc7b0002c9d7
       dbcon.commit();
       dbcon.setAutoCommit(true);
       System.out.println("\nBid successful!") ;
@@ -599,6 +602,7 @@ public class MyAuction
 
     } catch (SQLException e) {
       System.out.println("SQLException");
+      System.out.println(e);
       System.exit(0);
     }
   }
