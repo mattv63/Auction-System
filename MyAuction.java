@@ -585,11 +585,13 @@ public class MyAuction
 
       //insert new row into bidlog
       PreparedStatement s = dbcon.prepareStatement("insert into bidlog values(1, ?, ?, (SELECT c_date FROM ourSysDATE), ?)");
+      System.out.println("here");
       s.setInt(1, a_id);
       s.setString(2, currentUser);
       s.setInt(3, bid);
       s.executeQuery();
 
+      System.out.println("here");
       dbcon.commit();
       dbcon.setAutoCommit(true);
       System.out.println("\nBid successful!") ;
