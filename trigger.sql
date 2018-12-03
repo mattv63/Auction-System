@@ -1,15 +1,17 @@
 --trigger, fucntions, procedures, etc
-
+drop sequence seq1;
+drop sequence seq2;
 --where categories will be collected upon insert of product
-create or replace type cat_array as table of varchar2(20); 
+create or replace type vcarray as table of varchar2(20); 
 /
 
+create sequence seq2 start with 1 increment by 1 nomaxvalue;
 -- Procedure to add a new product to the DB
 CREATE OR REPLACE PROCEDURE proc_putProduct
 (
     pName in varchar2,
     pDescription in varchar2,
-    pCategories in cat_array,
+    pCategories in vcarray,
     pNumber_of_days in int,
     pSeller in varchar2,
     pMin_price in int,
@@ -19,15 +21,14 @@ is
     pStart_date date;
     pSell_date date;
 begin
-    select max(auction_ID) into pAuction_ID from Product;
-    pAuction_ID := pAuction_ID + 1;
+    select seq2.nextVal into pAuction_ID from dual;
     
     select max(c_date) into pStart_date from ourSysDate;
     
     pSell_date := pStart_date + pNumber_of_days; -- added so sell date will be end of auction date
     
     insert into Product(auction_id, name, description, seller, start_date, min_price, number_of_days, status, buyer, sell_date, amount)
-    values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'in auction', null, pSell_date, null);
+    values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'under auction', null, pSell_date, null);
     
     -- MISSING CATEGORY LEAF CHECK!!!
     
@@ -65,12 +66,12 @@ end;
 
 
 -- trigger to make new bidsn when row added to bidlog
-create sequence sequence1 start with 1 increment by 1 nomaxvalue;
+create sequence seq1 start with 1 increment by 1 nomaxvalue;
 CREATE OR REPLACE TRIGGER increment_bidsn
 before INSERT ON bidlog
 FOR EACH ROW
 BEGIN
-  select sequence1.NEXTVAL
+  select seq1.NEXTVAL
   into :new.bidsn
   from dual;
 END;
