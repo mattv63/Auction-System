@@ -875,7 +875,7 @@ public class MyAuction
 
     try
     {
-      pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh:mi:ss'))");
+      pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh24:mi:ss'))");
       pst.setString(1, date);
       pst.executeUpdate();
       System.out.println("System Date successfully updated");
