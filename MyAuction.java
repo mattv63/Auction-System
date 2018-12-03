@@ -216,6 +216,7 @@ public class MyAuction
         System.exit(1);
       }
     }
+
     // Display invalid categories
     int invalid_category_count = not_valid.size();
     String invalid = "";

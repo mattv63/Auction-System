@@ -1,6 +1,5 @@
 --trigger, fucntions, procedures, etc
 drop sequence seq1;
-drop sequence seq2;
 --where categories will be collected upon insert of product
 create or replace type vcarray as table of varchar2(20); 
 /
@@ -22,7 +21,8 @@ is
     pStart_date date;
     pSell_date date;
 begin
-    select seq2.nextVal into pAuction_ID from dual;
+    select max(auction_ID) into pAuction_ID from Product;
+    pAuction_ID := pAuction_ID + 1;
     
     select max(c_date) into pStart_date from ourSysDate;
     
