@@ -4,6 +4,7 @@ drop sequence seq2;
 --where categories will be collected upon insert of product
 create or replace type vcarray as table of varchar2(20); 
 /
+drop sequence seq1;
 
 create sequence seq2 start with 1 increment by 1 nomaxvalue;
 -- Procedure to add a new product to the DB

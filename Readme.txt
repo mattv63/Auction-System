@@ -51,3 +51,19 @@ Customer:
     2. The user will be prompted to enter the product name, description, categories, days for auction and minimum price.
     3. The user will be notified which categories were not accepted as valid ones
     4. An auction id is returned to the user
+    
+  Bid:
+    1. Select 4 from customer menu
+    2. User prompted to enter auction ID and bid amount
+    3. User will be notified whether the bid was successful or if there was an error
+  Sell:
+    1. Select 5 from customer menu
+    2. User will be shown a list of their auctions that have a status of closed if there are any
+    3. User enters which number from the list that they wish to sell
+    4. User is asked if they wish to sell the product for the second highest bid (or highest if only one bid)
+    5. User can choose to sell or withdraw the auction
+    6. Database is updated with new status of the auction
+  Suggestions:
+    1. Select 6 from customer menu
+    2. user will be shown suggestions for products to bid on based on similar users' bids
+    
