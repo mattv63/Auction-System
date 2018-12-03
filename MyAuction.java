@@ -15,6 +15,7 @@ public class MyAuction
   private Connection dbcon;
   private String username;
   private String password;
+  private String currentUser;
 
   public static void main(String[] args)
   {
@@ -152,14 +153,18 @@ public class MyAuction
       else if (choice == 4)
       {
         System.out.println("\nBid on Product");
+        placeBid();
+        
       }
       else if (choice == 5)
       {
         System.out.println("\nSell Product");
+        sellProductSetup();
       }
       else if (choice == 6)
       {
         System.out.println("\nSuggestions");
+        makeSuggestion();
       }
       else
       {
@@ -169,6 +174,172 @@ public class MyAuction
     }
   }
 
+  public void makeSuggestion() {
+    try {
+      Statement st;
+      ResultSet suggestions;
+      st = dbcon.createStatement();
+      //query to get back product id, name, description, and highest bid 
+      //for products that people who have bid on the same items as current user 
+      //have also bid on
+      suggestions = st.executeQuery("select product.auction_id, product.name, product.description, product.amount from (" +
+				"select friends.bidder, bids.auction_id from (select distinct bidder from bidlog b1 where not exists (" +
+				"select distinct auction_id from bidlog b2 where bidder = '" + currentUser + "' and not exists (select distinct bidder, auction_id " +
+				"from bidlog b3 where b1.bidder = b3.bidder and b2.auction_id = b3.auction_id)) and bidder <> '" + currentUser + "' and (" +
+				"select count(auction_id) from bidlog where bidder = '" + currentUser + "') > 0) friends join bidlog bids on friends.bidder = bids.bidder " +
+				"join product p on bids.auction_id = p.auction_id where bids.auction_id not in (select distinct auction_id from bidlog " +
+				"where bidder = '" + currentUser + "') and p.status = 'underauction') t1 join product on t1.auction_id = product.auction_id " +
+				"group by product.auction_id, product.name, product.description, product.amount order by count(bidder) desc");
+      
+      if (suggestions == null) {
+        System.out.println("There were no suggestions found for you");
+      }
+      else {
+        int i = 0;
+        while(suggestions.next()) {
+          i++;
+          System.out.println("Suggestion " + i + ":");
+          System.out.println("Product ID: " + suggestions.getInt(1));
+          System.out.println("Product Name: " + suggestions.getString(2));
+          System.out.println("Description: " + suggestions.getString(3));
+          System.out.println("Highest Bid: " + suggestions.getInt(4));
+          System.out.println("=============");
+        }
+      }
+    } catch (SQLException e) {
+      System.out.println("SQLException");
+      System.exit(0);
+    }
+  }
+  
+  public void sellProductSetup() {
+    try {
+      ResultSet closedAuctions;
+      Statement st;
+      st = dbcon.createStatement();
+      //query product table for all of the current user's closed auctions
+      closedAuctions = st.executeQuery("select auction_id, name, from product where seller = '" + currentUser + "' and status = 'closed'");
+      if (closedAuctions == null) {
+        System.out.println("You do not have any closed auctions");
+      }
+      else {
+        List<Integer> id = new ArrayList<Integer>();
+        List<String> product = new ArrayList<String>();
+        
+        //store the id and a display string for each product
+        while (closedAuctions.next()) {
+          id.add(closedAuctions.getInt(1));
+          product.add(closedAuctions.getString(2) + " >> ID: " + closedAuctions.getInt(1));
+        }
+        
+        //get which number of the product to sell
+        System.out.println("Your closed auctions:");
+        for (int i = 1; i <= product.size(); i++) {
+          System.out.println(i + ". " + product.get(i-1));
+        }
+        System.out.println("Enter number of product you'd like to sell");
+        String str = getChoice();
+        
+        int a_id = id.get(Integer.parseInt(str) - 1);
+        sellProduct(a_id);
+      }
+    }
+    catch (SQLException e) {
+      System.out.println("SQLException");
+      System.exit(0);
+    }
+  }
+  
+  //method actually updates the DB when a product is sold
+  public void sellProduct(int a_id) {
+    try {
+      ResultSet bidCount;
+      Statement st;
+      st = dbcon.createStatement();
+      //query bidlog table for the number of bids on the product
+      bidCount = st.executeQuery("select count(bidsn) as bids from bidlog where auction_id = " + a_id);
+      bidCount.next();
+      int bids = bidCount.getInt(1);
+      if(bids > 0) {
+        //get second or first highest bid (first if only one bid)
+        int bidNum = 1;
+        if (bids == 1)
+          bidNum = 1;
+        else 
+          bidNum = 2;
+        st = dbcon.createStatement();
+        ResultSet priceR = st.executeQuery("select amount from (select amount, rownum as rn from " + 
+          "(select amount from bidlog where auction_id = " + a_id + " " +
+					"order by bid_time desc) where rownum <= 2) where rn = " + bidNum);
+        priceR.next();
+        int price = priceR.getInt(1);
+        
+        System.out.println("Would you like to sell your product for $" + price + "?");
+        System.out.println("1. Sell Product");
+        System.out.println("2. Withdraw Product");
+        String str = getChoice();
+        int choice = Integer.parseInt(str);
+        if (choice == 1) {
+          //update product table to set status to sold and sell amount to highest bid
+          st = dbcon.createStatement();
+          st.executeQuery("update product set status = 'sold', buyer = (select * from " + 
+            "(select bidder from bidlog where auction_id = " + a_id + " " +
+						"order by bid_time desc) where rownum <= 1), sell_date = (select my_time from sys_time)," + 
+            " amount = " + price + " where auction_id = " + a_id);
+          System.out.println("Sold Product " + a_id + " for $" + price);
+        }
+        else {
+          //withdraw if selected
+          st = dbcon.createStatement();
+          st.executeQuery("update product set status = 'withdrawn' where auction_id = " + a_id);
+          System.out.println("Withdrew Product " + a_id);
+        }
+      }
+      else {
+        //withdraw if no bids on auction
+        st = dbcon.createStatement();
+        st.executeQuery("update product set status = 'withdrawn' where auction_id = " + a_id);
+        System.out.println("No bids were placed on your product (Auction ID = " + a_id + "). This auction has been withdrawn");
+      }
+    }
+    catch (SQLException e) {
+      System.out.println("SQLException");
+      System.exit(0);
+    }
+  }
+  
+  public void placeBid() {
+    System.out.println("\nEnter Auction ID");
+    String str = getChoice();
+    int a_id = Integer.parseInt(str);
+    System.out.println("\nEnter bid amount");
+    str = getChoice();
+    int bid = Integer.parseInt(str);
+    
+    try {
+      //lock table for inserts on bidlog
+      dbcon.setAutoCommit(false);
+			Statement locking = dbcon.createStatement();
+			locking.execute("lock table bidlog in share row exclusive mode");
+      
+      //insert new row into bidlog
+      PreparedStatement s = dbcon.prepareStatement("insert into bidlog values(1, ?, ?, (SELECT c_date FROM ourSysDATE), ?)");
+      s.setInt(1, a_id);
+      s.setString(2, currentUser);
+      s.setInt(3, bid);
+      s.executeQuery();
+      
+      dbcon.commit();
+      dbcon.setAutoCommit(true);
+      System.out.println("\nBid successful!") ;
+      
+      
+    } catch (SQLException e) {
+      System.out.println("SQLException");
+      System.exit(0);
+    }
+  }
+  
   //gets user input
   public String getChoice()
   {
@@ -264,6 +435,7 @@ public class MyAuction
         if(user.equals(name) && pass.equals(word))
         {
           valid = true;
+          currentUser = name;
           break;
         }
       }
