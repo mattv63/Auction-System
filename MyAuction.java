@@ -452,7 +452,7 @@ public class MyAuction
 				"where bidder = '" + currentUser + "') and p.status = 'underauction') t1 join product on t1.auction_id = product.auction_id " +
 				"group by product.auction_id, product.name, product.description, product.amount order by count(bidder) desc");
 
-      if (suggestions == null) {
+      if (!suggestions.next()) {
         System.out.println("There were no suggestions found for you");
       }
       else {
