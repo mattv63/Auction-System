@@ -7,10 +7,6 @@ Start up:
 4. Enter a valid username and password
 5. Enter a number corresponding to a possible action
 
-Customer:
-
-
-
 Administrator:
   New User:
   1. Select 1 from the Administrator menu
@@ -37,7 +33,7 @@ Administrator:
   3. The user will be prompted to enter a number of months and a search results limit
   4. The statistics will then be displayed
 
-User:
+Customer:
   Browse:
     1. Select 1 from the User menu
     2. Enter the number that corresponds with the parent category
