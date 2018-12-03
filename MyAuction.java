@@ -161,17 +161,20 @@ public class MyAuction
       {
         System.out.println("\nBid on Product");
         placeBid();
+        menus(2);
 
       }
       else if (choice == 5)
       {
         System.out.println("\nSell Product");
         sellProductSetup();
+        menus(2);
       }
       else if (choice == 6)
       {
         System.out.println("\nSuggestions");
         makeSuggestion();
+        menus(2);
       }
       else
       {
