@@ -374,7 +374,10 @@ public class MyAuction
 
       else {
 				while (products.next()) {
-					System.out.printf("%5d %-20s %-30s %10d\n", products.getInt(1), products.getString(2), products.getString(3), products.getInt(4));
+          System.out.println("Auction ID: " + products.getInt(1));
+          System.out.println("Product: " + products.getString(2));
+          System.out.println("Description: " + products.getString(3));
+          System.out.println("Price: " + products.getString(4));
 				}
       }
     } catch (SQLException e){
@@ -875,7 +878,7 @@ public class MyAuction
 
     try
     {
-      pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh:mi:ss'))");
+      pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh24:mi:ss'))");
       pst.setString(1, date);
       pst.executeUpdate();
       System.out.println("System Date successfully updated");
