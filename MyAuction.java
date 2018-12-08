@@ -204,8 +204,12 @@ public class MyAuction
     ResultSet r;
     for (String category: categories){
       try{
-        Statement s = dbcon.createStatement();
-        r = s.executeQuery("select count(name) from category where name = '"+ category + "' or parent_category = '"+ category +"'");
+        PreparedStatement pst = dbcon.prepareStatement("select count(name) from category where name = ? or parent_category = ?");
+        pst.setString(1, category);
+        pst.setString(2, category);
+        r = pst.executeQuery();
+        //Statement s = dbcon.createStatement();
+        //r = s.executeQuery("select count(name) from category where name = '"+ category + "' or parent_category = '"+ category +"'");
         r.next();
         if (r.getInt(1) != 1){
           cats_copy.remove(category);
@@ -281,30 +285,48 @@ public class MyAuction
       return;
     }
 
-    first_keyword = keywords[0];
+    //first_keyword = keywords[0];
+    first_keyword = "%" + keywords[0] + "%";
 
     if (keywords.length != 2){
-      second_keyword = null;
+      //second_keyword = null;
+      second_keyword = "%%";
     }
 
     else{
-      second_keyword = keywords[1];
+      //second_keyword = keywords[1];
+      second_keyword = "%" + keywords[1] + "%";
     }
 
     try {
-      String q = "";
+      //String q = "";
       ResultSet products;
 
-      if (second_keyword != null){
+      /*if (second_keyword != null){
         q = " and upper(description) like upper('%" + second_keyword + "%')";
-      }
+      }*/
+      PreparedStatement pst = dbcon.prepareStatement("select auction_id, name, description from product where upper(description) like upper(?) and upper(description) like upper(?)");
+      pst.setString(1, first_keyword);
+      pst.setString(2, second_keyword);
+      products = pst.executeQuery();
 
-      Statement s = dbcon.createStatement();
-      products = s.executeQuery("select auction_id, name, description from product where upper(description) like upper('%" + first_keyword + "%')" + q);
-      if (!(products.isBeforeFirst())){
+      if(!products.next())
+      {
+        System.out.println("No products found matching the keyword(s)");
+      }
+      else
+      {
+        while(products.next()) {
+					System.out.println("Auction ID: " + products.getInt(1));
+          System.out.println("Product: " + products.getString(2));
+          System.out.println("Description: " + products.getString(3) + "\n");
+				}
+      }
+      //Statement s = dbcon.createStatement();
+      //products = s.executeQuery("select auction_id, name, description from product where upper(description) like upper('%" + first_keyword + "%')" + q);
+      /*if (!(products.isBeforeFirst())){
         products = null;
       }
-
       if (products != null){
         while(products.next()) {
 					System.out.println("Auction ID: " + products.getInt(1));
@@ -314,7 +336,7 @@ public class MyAuction
       }
       else {
         System.out.println("No products found matching the keyword(s)");
-      }
+      }*/
     } catch(SQLException e){
         System.err.println("Error");
         System.exit(1);
@@ -947,16 +969,17 @@ public class MyAuction
       {
         // full inventory
         st = dbcon.createStatement();
-        result = st.executeQuery("SELECT p.name, p.status, b.amount AS highest_bid, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' UNION SELECT p.name, p.status, p.amount AS highest_bid, p.buyer FROM product p WHERE p.status = 'sold'");
+        result = st.executeQuery("SELECT * FROM(SELECT p.name, p.status, b.amount, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' UNION SELECT p.name, p.status, p.amount, p.buyer FROM product p WHERE p.status = 'sold' UNION SELECT p.name, p.status, p.amount, p.buyer FROM product p WHERE p.auction_id NOT IN (SELECT b.auction_id FROM bidlog b)) t ORDER BY t.name");
       }
       else if (inv == 2)
       {
         //specific customer
         System.out.println("Enter the Customer's username");
         String seller = getChoice();
-        pst = dbcon.prepareStatement("SELECT p.name, p.status, b.amount AS highest_bid, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' AND p.seller = ? UNION SELECT p.name, p.status, p.amount AS highest_bid, p.buyer FROM product p WHERE p.status = 'sold' AND p.seller = ?");
+        pst = dbcon.prepareStatement("SELECT * FROM (SELECT p.name, p.status, b.amount, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' AND p.seller = ? UNION SELECT p.name, p.status, p.amount, p.buyer FROM product p WHERE p.status = 'sold' AND p.seller = ? UNION SELECT p.name, p.status, p.amount, p.buyer FROM product p WHERE p.auction_id NOT IN (SELECT b.auction_id FROM bidlog b) AND p.seller = ?) t ORDER BY t.name");
         pst.setString(1, seller);
         pst.setString(2, seller);
+        pst.setString(3, seller);
         result = pst.executeQuery();
       }
 
@@ -1026,7 +1049,7 @@ public class MyAuction
       PreparedStatement pst;
       ResultSet result;
 
-      pst = dbcon.prepareStatement("SELECT * FROM (SELECT c.name, func_productcount(?, c.name) AS products FROM category c WHERE func_productcount(?, c.name) IS NOT NULL AND c.parent_category IS NOT NULL ORDER BY products desc) WHERE ROWNUM <= ?");
+      pst = dbcon.prepareStatement("SELECT * FROM (SELECT c.name, func_productcount(?, c.name) AS products FROM category c WHERE func_productcount(?, c.name) IS NOT NULL AND c.name NOT IN (SELECT c1.parent_category FROM category c1 WHERE c1.parent_category IS NOT NULL) ORDER BY products desc) WHERE ROWNUM <= ?");
       pst.setInt(1, months);
       pst.setInt(2, months);
       pst.setInt(3, k);
