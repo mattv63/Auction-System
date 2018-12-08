@@ -133,6 +133,8 @@ public class MyAuction
       System.out.println("4. Bid on Product");
       System.out.println("5. Sell Product");
       System.out.println("6. Suggestions");
+      System.out.println("7. Main Menu");
+      System.out.println("8. Exit");
 
       //get input
       str = getChoice();
@@ -176,10 +178,19 @@ public class MyAuction
         makeSuggestion();
         menus(2);
       }
+      else if (choice == 7)
+      {
+        menus(0);
+      }
+      else if (choice == 8)
+      {
+        System.out.println("Exit");
+        System.exit(1);
+      }
       else
       {
         System.out.println("Not a valid option. Try again.");
-        menus(0);
+        menus(2);
       }
     }
   }
@@ -608,22 +619,28 @@ public class MyAuction
     int a_id = Integer.parseInt(str);
 
     // retrieves highest bid on product and displays to user
+    int h_bid = 0;
     try {
       Statement st = dbcon.createStatement();
       ResultSet highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + a_id);
       highest_bid.next();
-      int h_bid = highest_bid.getInt(1);
+      h_bid = highest_bid.getInt(1);
       System.out.println("Current highest bid is " + h_bid);
     } catch (SQLException e){
       System.out.println("Error");
       System.exit(0);
     }
 
-
-
-    System.out.println("\nEnter bid amount");
-    str = getChoice();
-    int bid = Integer.parseInt(str);
+    int bid = 0;
+    while(true){
+      System.out.println("\nEnter bid amount");
+      str = getChoice();
+      bid = Integer.parseInt(str);
+      if (bid > h_bid){
+        break;
+      }
+      System.out.println("Bid must be higher than current highest bid of " + h_bid);
+    }
 
     try {
       //lock table for inserts on bidlog
