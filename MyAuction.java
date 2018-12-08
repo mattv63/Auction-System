@@ -381,7 +381,7 @@ public class MyAuction
       str = getChoice();
       choice = Integer.parseInt(str);
 
-      String q = null;
+      /*String q = null;
       if (choice == 1){
         q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount desc";
       }
@@ -390,28 +390,58 @@ public class MyAuction
       }
       else {
         q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by name asc";
-      }
+      }*/
 
       ResultSet products = null;
 
       try{
-        Statement s = dbcon.createStatement();
-        products = s.executeQuery(q);
+        PreparedStatement pst;
+        if (choice == 1){
+          pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by amount desc");
+        }
+        else if (choice == 2){
+          pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by amount asc");
+        }
+        else {
+          pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by name asc");
+        }
+        pst.setString(1, category_choice);
+        products = pst.executeQuery();
+        //Statement s = dbcon.createStatement();
+        //products = s.executeQuery(q);
       } catch (SQLException e) {
           System.err.println("Error");
           System.exit(1);
       }
       ResultSet highest_bid = null;
 
-      if (products == null){
+      if(!products.isBeforeFirst())
+      {
         System.out.println("No products found");
       }
 
       else {
 				while (products.next()) {
           try {
-            Statement st = dbcon.createStatement();
-            highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
+            PreparedStatement ps = dbcon.prepareStatement("select max(amount) from bidlog where auction_id = ?");
+            ps.setInt(1, products.getInt(1));
+            highest_bid = ps.executeQuery();
+            //Statement st = dbcon.createStatement();
+            //highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
+
+            highest_bid.next();
+            if(highest_bid.getInt(1) == 0)
+            {
+              ps = dbcon.prepareStatement("SELECT min_price FROM product where auction_id = ?");
+              ps.setInt(1, products.getInt(1));
+              highest_bid = ps.executeQuery();
+            }
+            else
+            {
+              highest_bid.previous();
+            }
+
+
           } catch (SQLException e){
             System.err.println("Error");
             System.exit(1);
@@ -446,8 +476,11 @@ public class MyAuction
     }
     else{
       try {
-        Statement s = dbcon.createStatement();
-        subcats = s.executeQuery("SELECT name FROM Category WHERE parent_category = '" + parent_category + "'");
+        PreparedStatement pst = dbcon.prepareStatement("SELECT name FROM Category WHERE parent_category = ?");
+        pst.setString(1, parent_category);
+        subcats = pst.executeQuery();
+        //Statement s = dbcon.createStatement();
+        //subcats = s.executeQuery("SELECT name FROM Category WHERE parent_category = '" + parent_category + "'");
         if (subcats.isBeforeFirst()){
 
         }
@@ -535,23 +568,19 @@ public class MyAuction
       }*/
       if(closedAuctions.isBeforeFirst())
       {
-        System.out.println("HERE4");
         List<Integer> id = new ArrayList<Integer>();
         List<String> product = new ArrayList<String>();
 
         //store the id and a display string for each product
         while (closedAuctions.next()) {
           id.add(closedAuctions.getInt(1));
-          System.out.println("HERE1");
           product.add(closedAuctions.getString(2) + " >> ID: " + closedAuctions.getInt(1));
-          System.out.println("HERE2");
         }
 
         //get which number of the product to sell
         System.out.println("Your closed auctions:");
         for (int i = 1; i <= product.size(); i++) {
           System.out.println(i + ". " + product.get(i-1));
-          System.out.println("HERE3");
         }
         System.out.println("Enter the number of the product you'd like to sell");
         String str = getChoice();
