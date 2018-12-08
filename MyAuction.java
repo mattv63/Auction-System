@@ -520,33 +520,47 @@ public class MyAuction
   public void sellProductSetup() {
     try {
       ResultSet closedAuctions;
-      Statement st;
-      st = dbcon.createStatement();
+      PreparedStatement pst;
+
       //query product table for all of the current user's closed auctions
-      closedAuctions = st.executeQuery("select auction_id, name, from product where seller = '" + currentUser + "' and status = 'closed'");
-      if (closedAuctions == null) {
+      pst = dbcon.prepareStatement("select auction_id, name from product where seller = ? and status = 'closed'");
+      pst.setString(1, currentUser);
+      closedAuctions = pst.executeQuery();
+      //Statement st;
+      //st = dbcon.createStatement();
+      //closedAuctions = st.executeQuery("select auction_id, name, from product where seller = '" + currentUser + "' and status = 'closed'");
+
+      /*if (closedAuctions == null) {
         System.out.println("You do not have any closed auctions");
-      }
-      else {
+      }*/
+      if(closedAuctions.isBeforeFirst())
+      {
+        System.out.println("HERE4");
         List<Integer> id = new ArrayList<Integer>();
         List<String> product = new ArrayList<String>();
 
         //store the id and a display string for each product
         while (closedAuctions.next()) {
           id.add(closedAuctions.getInt(1));
+          System.out.println("HERE1");
           product.add(closedAuctions.getString(2) + " >> ID: " + closedAuctions.getInt(1));
+          System.out.println("HERE2");
         }
 
         //get which number of the product to sell
         System.out.println("Your closed auctions:");
         for (int i = 1; i <= product.size(); i++) {
           System.out.println(i + ". " + product.get(i-1));
+          System.out.println("HERE3");
         }
-        System.out.println("Enter number of product you'd like to sell");
+        System.out.println("Enter the number of the product you'd like to sell");
         String str = getChoice();
 
         int a_id = id.get(Integer.parseInt(str) - 1);
         sellProduct(a_id);
+      }
+      else {
+        System.out.println("You do not have any closed auctions");
       }
     }
     catch (SQLException e) {
@@ -559,10 +573,14 @@ public class MyAuction
   public void sellProduct(int a_id) {
     try {
       ResultSet bidCount;
-      Statement st;
-      st = dbcon.createStatement();
+      PreparedStatement pst;
+      //Statement st;
+      //st = dbcon.createStatement();
       //query bidlog table for the number of bids on the product
-      bidCount = st.executeQuery("select count(bidsn) as bids from bidlog where auction_id = " + a_id);
+      pst = dbcon.prepareStatement("select count(bidsn) as bids from bidlog where auction_id = ?");
+      pst.setInt(1, a_id);
+      bidCount = pst.executeQuery();
+      //bidCount = st.executeQuery("select count(bidsn) as bids from bidlog where auction_id = " + a_id);
       bidCount.next();
       int bids = bidCount.getInt(1);
       if(bids > 0) {
@@ -572,10 +590,15 @@ public class MyAuction
           bidNum = 1;
         else
           bidNum = 2;
-        st = dbcon.createStatement();
-        ResultSet priceR = st.executeQuery("select amount from (select amount, rownum as rn from " +
+
+        pst = dbcon.prepareStatement("select amount from (select amount, rownum as rn from (select amount from bidlog where auction_id = ? order by bid_time desc) where rownum <= 2) where rn = ?");
+        pst.setInt(1, a_id);
+        pst.setInt(2, bidNum);
+        ResultSet priceR = pst.executeQuery();
+        //st = dbcon.createStatement();
+        /*ResultSet priceR = st.executeQuery("select amount from (select amount, rownum as rn from " +
           "(select amount from bidlog where auction_id = " + a_id + " " +
-					"order by bid_time desc) where rownum <= 2) where rn = " + bidNum);
+					"order by bid_time desc) where rownum <= 2) where rn = " + bidNum);*/
         priceR.next();
         int price = priceR.getInt(1);
 
@@ -586,24 +609,35 @@ public class MyAuction
         int choice = Integer.parseInt(str);
         if (choice == 1) {
           //update product table to set status to sold and sell amount to highest bid
-          st = dbcon.createStatement();
-          st.executeQuery("update product set status = 'sold', buyer = (select * from " +
+          pst = dbcon.prepareStatement("update product set status = 'sold', buyer = (select * from (select bidder from bidlog where auction_id = ? order by bid_time desc) where rownum <= 1), sell_date = (select my_time from sys_time), amount = ? where auction_id = ?");
+          pst.setInt(1, a_id);
+          pst.setInt(2, price);
+          pst.setInt(3, a_id);
+          pst.executeQuery();
+          //st = dbcon.createStatement();
+          /*st.executeQuery("update product set status = 'sold', buyer = (select * from " +
             "(select bidder from bidlog where auction_id = " + a_id + " " +
 						"order by bid_time desc) where rownum <= 1), sell_date = (select my_time from sys_time)," +
-            " amount = " + price + " where auction_id = " + a_id);
+            " amount = " + price + " where auction_id = " + a_id);*/
           System.out.println("Sold Product " + a_id + " for $" + price);
         }
         else {
           //withdraw if selected
-          st = dbcon.createStatement();
-          st.executeQuery("update product set status = 'withdrawn' where auction_id = " + a_id);
+          pst = dbcon.prepareStatement("update product set status = 'withdrawn' where auction_id = ?");
+          pst.setInt(1, a_id);
+          pst.executeQuery();
+          //st = dbcon.createStatement();
+          //st.executeQuery("update product set status = 'withdrawn' where auction_id = " + a_id);
           System.out.println("Withdrew Product " + a_id);
         }
       }
       else {
         //withdraw if no bids on auction
-        st = dbcon.createStatement();
-        st.executeQuery("update product set status = 'withdrawn' where auction_id = " + a_id);
+        pst = dbcon.prepareStatement("update product set status = 'withdrawn' where auction_id = ?");
+        pst.setInt(1, a_id);
+        pst.executeQuery();
+        //st = dbcon.createStatement();
+        //st.executeQuery("update product set status = 'withdrawn' where auction_id = " + a_id);
         System.out.println("No bids were placed on your product (Auction ID = " + a_id + "). This auction has been withdrawn");
       }
     }
@@ -612,7 +646,6 @@ public class MyAuction
       System.exit(0);
     }
   }
-
   public void placeBid() {
     System.out.println("\nEnter Auction ID");
     String str = getChoice();
