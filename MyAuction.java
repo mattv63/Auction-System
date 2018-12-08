@@ -17,6 +17,7 @@ public class MyAuction
   private String username;
   private String password;
   private String currentUser;
+  public static Scanner sin = new Scanner(System.in);
 
   public static void main(String[] args)
   {
@@ -59,6 +60,7 @@ public class MyAuction
       System.out.println("---------");
       System.out.println("1. Administrator");
       System.out.println("2. Customer");
+      System.out.println("3. Driver Test");
 
       //get input
       str = getChoice();
@@ -74,6 +76,10 @@ public class MyAuction
       {
         System.out.println("\nCustomer Login");
         login(choice);
+      }
+      else if (choice == 3)
+      {
+        driverTest();
       }
       else
       {
@@ -257,13 +263,13 @@ public class MyAuction
     str = getChoice();
     int price = Integer.parseInt(str);
 
-    int auction_id = putToAuction(name, description, cats_copy.toArray(), days, price);
+    int auction_id = putToAuction(name, description, cats_copy.toArray(), days, currentUser, price);
     System.out.println("Auction was created. Your auction ID is " + auction_id + "");
 
 
   }
 
-  public int putToAuction(String name, String description, Object[] categories, int days, int price) {
+  public int putToAuction(String name, String description, Object[] categories, int days, String cUser, int price) {
     try{
       CallableStatement auction = dbcon.prepareCall("begin proc_putProduct(?, ?, ?, ?, ?, ?, ?); end;");
       auction.registerOutParameter(7, Types.INTEGER);
@@ -272,7 +278,7 @@ public class MyAuction
       ArrayDescriptor desc = ArrayDescriptor.createDescriptor("VCARRAY", dbcon);
       auction.setArray(3, new ARRAY(desc, dbcon, categories));
       auction.setInt(4, days);
-      auction.setString(5, currentUser);
+      auction.setString(5, cUser);
       auction.setInt(6, price);
       auction.execute();
       return auction.getInt(7);
@@ -308,7 +314,11 @@ public class MyAuction
       //second_keyword = keywords[1];
       second_keyword = "%" + keywords[1] + "%";
     }
+    findProducts(first_keyword, second_keyword);
 
+  }
+
+  public void findProducts(String first_keyword, String second_keyword){
     try {
       //String q = "";
       ResultSet products;
@@ -352,11 +362,9 @@ public class MyAuction
         System.err.println("Error");
         System.exit(1);
     }
-
   }
 
   public void browse_products() {
-    try{
       List<String> categories = null;
       String category_choice = null;
       int choice = 0;
@@ -381,7 +389,27 @@ public class MyAuction
       str = getChoice();
       choice = Integer.parseInt(str);
 
-      String q = null;
+<<<<<<< HEAD
+      productsFromCategory(category_choice, choice);
+
+  }
+
+
+  public void productsFromCategory(String category_choice,int choice){
+    String str;
+
+    String q = null;
+    if (choice == 1){
+      q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount desc";
+    }
+    else if (choice == 2){
+      q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount asc";
+    }
+    else {
+      q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by name asc";
+    }
+=======
+      /*String q = null;
       if (choice == 1){
         q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount desc";
       }
@@ -390,43 +418,98 @@ public class MyAuction
       }
       else {
         q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by name asc";
-      }
+      }*/
+>>>>>>> 337d99bf227b3855e648726c8d15707469872c8a
 
-      ResultSet products = null;
+    ResultSet products = null;
 
+    try{
+      Statement s = dbcon.createStatement();
+      products = s.executeQuery(q);
+    } catch (SQLException e) {
+        System.err.println("Error");
+        System.exit(1);
+    }
+    ResultSet highest_bid = null;
+
+    if (products == null){
+      System.out.println("No products found");
+    }
+
+    else {
       try{
-        Statement s = dbcon.createStatement();
-        products = s.executeQuery(q);
+<<<<<<< HEAD
+      while (products.next()) {
+        try {
+          Statement st = dbcon.createStatement();
+          highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
+        } catch (SQLException e){
+          System.err.println("Error");
+          System.exit(1);
+        }
+=======
+        PreparedStatement pst;
+        if (choice == 1){
+          pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by amount desc");
+        }
+        else if (choice == 2){
+          pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by amount asc");
+        }
+        else {
+          pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by name asc");
+        }
+        pst.setString(1, category_choice);
+        products = pst.executeQuery();
+        //Statement s = dbcon.createStatement();
+        //products = s.executeQuery(q);
       } catch (SQLException e) {
           System.err.println("Error");
           System.exit(1);
       }
       ResultSet highest_bid = null;
 
-      if (products == null){
+      if(!products.isBeforeFirst())
+      {
         System.out.println("No products found");
       }
 
       else {
 				while (products.next()) {
           try {
-            Statement st = dbcon.createStatement();
-            highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
+            PreparedStatement ps = dbcon.prepareStatement("select max(amount) from bidlog where auction_id = ?");
+            ps.setInt(1, products.getInt(1));
+            highest_bid = ps.executeQuery();
+            //Statement st = dbcon.createStatement();
+            //highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
+
+            highest_bid.next();
+            if(highest_bid.getInt(1) == 0)
+            {
+              ps = dbcon.prepareStatement("SELECT min_price FROM product where auction_id = ?");
+              ps.setInt(1, products.getInt(1));
+              highest_bid = ps.executeQuery();
+            }
+            else
+            {
+              highest_bid.previous();
+            }
+
+
           } catch (SQLException e){
             System.err.println("Error");
             System.exit(1);
           }
 
-          highest_bid.next();
-          System.out.println("Auction ID: " + products.getInt(1));
-          System.out.println("Product: " + products.getString(2));
-          System.out.println("Description: " + products.getString(3));
-          System.out.println("Highest Bid: " + highest_bid.getInt(1));
-				}
+        highest_bid.next();
+        System.out.println("\nAuction ID: " + products.getInt(1));
+        System.out.println("Product: " + products.getString(2));
+        System.out.println("Description: " + products.getString(3));
+        System.out.println("Highest Bid: " + highest_bid.getInt(1));
       }
-    } catch (SQLException e){
-      System.err.println("Error");
+    }catch(SQLException e){
+      System.err.println("error");
       System.exit(1);
+    }
     }
   }
 
@@ -446,8 +529,11 @@ public class MyAuction
     }
     else{
       try {
-        Statement s = dbcon.createStatement();
-        subcats = s.executeQuery("SELECT name FROM Category WHERE parent_category = '" + parent_category + "'");
+        PreparedStatement pst = dbcon.prepareStatement("SELECT name FROM Category WHERE parent_category = ?");
+        pst.setString(1, parent_category);
+        subcats = pst.executeQuery();
+        //Statement s = dbcon.createStatement();
+        //subcats = s.executeQuery("SELECT name FROM Category WHERE parent_category = '" + parent_category + "'");
         if (subcats.isBeforeFirst()){
 
         }
@@ -535,23 +621,19 @@ public class MyAuction
       }*/
       if(closedAuctions.isBeforeFirst())
       {
-        System.out.println("HERE4");
         List<Integer> id = new ArrayList<Integer>();
         List<String> product = new ArrayList<String>();
 
         //store the id and a display string for each product
         while (closedAuctions.next()) {
           id.add(closedAuctions.getInt(1));
-          System.out.println("HERE1");
           product.add(closedAuctions.getString(2) + " >> ID: " + closedAuctions.getInt(1));
-          System.out.println("HERE2");
         }
 
         //get which number of the product to sell
         System.out.println("Your closed auctions:");
         for (int i = 1; i <= product.size(); i++) {
           System.out.println(i + ". " + product.get(i-1));
-          System.out.println("HERE3");
         }
         System.out.println("Enter the number of the product you'd like to sell");
         String str = getChoice();
@@ -675,17 +757,22 @@ public class MyAuction
       System.out.println("Bid must be higher than current highest bid of " + h_bid);
     }
 
+    bid(a_id, currentUser, bid);
+
+  }
+
+  public void bid(int auction_id, String cuser, int bid_amount){
     try {
       //lock table for inserts on bidlog
       dbcon.setAutoCommit(false);
-			Statement locking = dbcon.createStatement();
-			locking.execute("lock table bidlog in share row exclusive mode");
+      Statement locking = dbcon.createStatement();
+      locking.execute("lock table bidlog in share row exclusive mode");
 
       //insert new row into bidlog
       PreparedStatement s = dbcon.prepareStatement("insert into bidlog values(1, ?, ?, (SELECT c_date FROM ourSysDATE), ?)");
-      s.setInt(1, a_id);
-      s.setString(2, currentUser);
-      s.setInt(3, bid);
+      s.setInt(1, auction_id);
+      s.setString(2, cuser);
+      s.setInt(3, bid_amount);
       s.executeQuery();
 
       dbcon.commit();
@@ -929,13 +1016,9 @@ public class MyAuction
             valid = true;
           }
         }
-        pst = dbcon.prepareStatement("INSERT INTO Customer VALUES(?, ?, ?, ?, ?)");
-        pst.setString(1, user);
-        pst.setString(2, pass);
-        pst.setString(3, name);
-        pst.setString(4, addr);
-        pst.setString(5, eaddr);
-        result = pst.executeQuery();
+
+        addCustomer(user, pass, name, addr, eaddr);
+
       }
     }
     catch (SQLException e)
@@ -946,6 +1029,26 @@ public class MyAuction
 
     System.out.println("Successfully added User");
     menus(1);
+  }
+
+  public void addCustomer(String user, String pass, String name, String addr, String eaddr){
+    try{
+      ResultSet result;
+      Statement st;
+      PreparedStatement pst;
+      st = dbcon.createStatement();
+
+      pst = dbcon.prepareStatement("INSERT INTO Customer VALUES(?, ?, ?, ?, ?)");
+      pst.setString(1, user);
+      pst.setString(2, pass);
+      pst.setString(3, name);
+      pst.setString(4, addr);
+      pst.setString(5, eaddr);
+      result = pst.executeQuery();
+  } catch(SQLException e){
+    System.err.println("error");
+    System.exit(1);
+    }
   }
 
   public void updateSysdate()
@@ -1218,6 +1321,88 @@ public class MyAuction
       System.out.println("SQLException");
       System.exit(0);
     }
+  }
+
+  public void driverTest(){
+    System.out.println("Driver test will now begin. Make sure that schema.sql and trigger.sql have both been run.");
+    System.out.println("Press enter to continue");
+    sin.nextLine();
+
+    System.out.println("Adding Customers");
+    System.out.println("Press enter to continue");
+    sin.nextLine();
+    addCustomer("ctest1", "test", "ctest1", "testetstest", "test@test.com");
+    addCustomer("ctest2", "test", "ctest2", "testetstest", "test@test.com");
+    addCustomer("ctest3", "test", "ctest3", "testetstest", "test@test.com");
+    addCustomer("ctest4", "test", "ctest4", "testetstest", "test@test.com");
+    addCustomer("ctest5", "test", "ctest5", "testetstest", "test@test.com");
+    addCustomer("ctest6", "test", "ctest6", "testetstest", "test@test.com");
+    addCustomer("ctest7", "test", "ctest7", "testetstest", "test@test.com");
+    addCustomer("ctest8", "test", "ctest8", "testetstest", "test@test.com");
+    addCustomer("ctest9", "test", "ctest9", "testetstest", "test@test.com");
+
+    List<String> cats1 = new ArrayList<String>();
+    List<String> cats2 = new ArrayList<String>();
+
+    cats1.add("cat3");
+    cats1.add("cat4");
+    cats2.add("cat5");
+
+    System.out.println("Adding Products");
+    System.out.println("Press enter to continue");
+    sin.nextLine();
+    putToAuction("ptest1", "filler description", cats1.toArray(), 5, "ctest1", 20);
+    putToAuction("ptest2", "filler description", cats1.toArray(), 5, "ctest2", 30);
+    putToAuction("ptest3", "filler description", cats1.toArray(), 5, "ctest2", 40);
+    putToAuction("ptest4", "filler description wow", cats1.toArray(), 5, "ctest3", 30);
+    putToAuction("ptest5", "filler description", cats1.toArray(), 5, "ctest5", 20);
+    putToAuction("ptest6", "filler description", cats2.toArray(), 5, "ctest6", 10);
+    putToAuction("ptest7", "filler description", cats2.toArray(), 5, "ctest6", 25);
+    putToAuction("ptest8", "filler description", cats2.toArray(), 5, "ctest6", 5);
+    putToAuction("ptest9", "filler description", cats2.toArray(), 5, "ctest9", 100);
+
+    System.out.println("Users will now bid on products");
+    System.out.println("Press enter to continue");
+    sin.nextLine();
+    bid(1, "ctest1", 100);
+    bid(2, "ctest2", 120);
+    bid(3, "ctest3", 80);
+    bid(4, "ctest4", 120);
+    bid(5, "ctest1", 100);
+    bid(6, "ctest2", 40);
+    bid(7, "ctest5", 60);
+    bid(8, "ctest6", 80);
+
+    System.out.println("Browsing Products in category 3 in decreasing price order");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    productsFromCategory("cat3", 1);
+
+    System.out.println("Browsing Products in category 5 in decreasing price order");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    productsFromCategory("cat5", 1);
+
+    System.out.println("Browsing Products in category 10 in decreasing price order. (There are no products in this category)");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    productsFromCategory("cat10", 1);
+
+    System.out.println("We will now search for product by one or two keywords");
+    System.out.println("Searching for word 'filler'");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    findProducts("%filler%", "%%");
+
+    System.out.println("Searching for word 'wow'");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    findProducts("%wow%", "%%");
+
+    System.out.println("Searching for word 'hello'. This word is not in any description");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    findProducts("%hello%", "%%");
   }
 
 }
