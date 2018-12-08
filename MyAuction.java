@@ -368,6 +368,7 @@ public class MyAuction
           System.err.println("Error");
           System.exit(1);
       }
+      ResultSet highest_bid = null;
 
       if (products == null){
         System.out.println("No products found");
@@ -375,10 +376,19 @@ public class MyAuction
 
       else {
 				while (products.next()) {
+          try {
+            Statement st = dbcon.createStatement();
+            highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
+          } catch (SQLException e){
+            System.err.println("Error");
+            System.exit(1);
+          }
+
+          highest_bid.next();
           System.out.println("Auction ID: " + products.getInt(1));
           System.out.println("Product: " + products.getString(2));
           System.out.println("Description: " + products.getString(3));
-          System.out.println("Price: " + products.getString(4));
+          System.out.println("Highest Bid: " + highest_bid.getInt(1));
 				}
       }
     } catch (SQLException e){
@@ -574,6 +584,21 @@ public class MyAuction
     System.out.println("\nEnter Auction ID");
     String str = getChoice();
     int a_id = Integer.parseInt(str);
+
+    // retrieves highest bid on product and displays to user
+    try {
+      Statement st = dbcon.createStatement();
+      ResultSet highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + a_id);
+      highest_bid.next();
+      int h_bid = highest_bid.getInt(1);
+      System.out.println("Current highest bid is " + h_bid);
+    } catch (SQLException e){
+      System.out.println("Error");
+      System.exit(0);
+    }
+
+
+
     System.out.println("\nEnter bid amount");
     str = getChoice();
     int bid = Integer.parseInt(str);

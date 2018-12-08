@@ -1,11 +1,14 @@
 --trigger, fucntions, procedures, etc
 drop sequence seq1;
+drop sequence seq2;
 --where categories will be collected upon insert of product
 create or replace type vcarray as table of varchar2(20); 
 /
 
 create sequence seq1 start with 1 increment by 1 nomaxvalue;
 create sequence seq2 start with 1 increment by 1 nomaxvalue;
+
+
 -- Procedure to add a new product to the DB
 CREATE OR REPLACE PROCEDURE proc_putProduct
 (
@@ -20,6 +23,7 @@ CREATE OR REPLACE PROCEDURE proc_putProduct
 is
     pStart_date date;
     pSell_date date;
+    cat_count int;
 begin
     select max(auction_ID) into pAuction_ID from Product;
     pAuction_ID := pAuction_ID + 1;
@@ -31,11 +35,12 @@ begin
     insert into Product(auction_id, name, description, seller, start_date, min_price, number_of_days, status, buyer, sell_date, amount)
     values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'under auction', null, pSell_date, null);
     
-    -- MISSING CATEGORY LEAF CHECK!!!
-    
-    -- insert categories into belongsto table
+    -- checks if category is a leaf and then inserts into belongsto table
     for i in 1..pCategories.count loop
-        insert into BelongsTo values(pAuction_ID, pCategories(i));
+        select count(name) into cat_count from Category where pCategories(i) = Category.name or pCategories(i) = Category.parent_category;
+        if cat_count = 1
+        then insert into BelongsTo values(pAuction_ID, pCategories(i));
+        end if;
     end loop;
     
     return;

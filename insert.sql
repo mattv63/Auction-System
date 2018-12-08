@@ -8,11 +8,11 @@ INSERT INTO customer VALUES('cccc', '3333', 'Matt V', null, null);
 
 INSERT INTO administrator VALUES('dddd', '4444', 'Panos', null, null);
 
-INSERT INTO product VALUES(1,'p1',null, 'aaaa', SYSDATE, 10, 20, 'sold', 'bbbb', SYSDATE, 50);
-INSERT INTO product VALUES(2,'p2',null, 'aaaa', SYSDATE, 10, 20, 'sold', 'cccc', SYSDATE, 50);
-INSERT INTO product VALUES(3,'p3',null, 'bbbb', SYSDATE, 10, 20, 'sold', 'cccc', SYSDATE, 50);
-INSERT INTO product VALUES(4,'p4',null, 'bbbb', SYSDATE, 10, 20, 'sold', 'aaaa', SYSDATE, 50);
-INSERT INTO product VALUES(5,'p5',null, 'cccc', SYSDATE, 10, 20, 'sold', 'bbbb', SYSDATE, 50);
+INSERT INTO product VALUES(1,'p1',null, 'aaaa', SYSDATE, 10, 20, 'under auction', 'bbbb', SYSDATE, 50);
+INSERT INTO product VALUES(2,'p2',null, 'aaaa', SYSDATE, 10, 20, 'under auction', 'cccc', SYSDATE, 50);
+INSERT INTO product VALUES(3,'p3',null, 'bbbb', SYSDATE, 10, 20, 'under auction', 'cccc', SYSDATE, 50);
+INSERT INTO product VALUES(4,'p4',null, 'bbbb', SYSDATE, 10, 20, 'under auction', 'aaaa', SYSDATE, 50);
+INSERT INTO product VALUES(5,'p5',null, 'cccc', SYSDATE, 10, 20, 'under auction', 'bbbb', SYSDATE, 50);
 
 INSERT INTO bidlog VALUES(1,1,'cccc',SYSDATE, 40);
 INSERT INTO bidlog VALUES(2,1,'bbbb',SYSDATE, 50);
