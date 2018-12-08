@@ -389,26 +389,14 @@ public class MyAuction
       str = getChoice();
       choice = Integer.parseInt(str);
 
-<<<<<<< HEAD
       productsFromCategory(category_choice, choice);
 
   }
 
 
   public void productsFromCategory(String category_choice,int choice){
+    try{
     String str;
-
-    String q = null;
-    if (choice == 1){
-      q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount desc";
-    }
-    else if (choice == 2){
-      q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount asc";
-    }
-    else {
-      q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by name asc";
-    }
-=======
       /*String q = null;
       if (choice == 1){
         q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by amount desc";
@@ -419,35 +407,10 @@ public class MyAuction
       else {
         q = "SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = '" + category_choice + "') order by name asc";
       }*/
->>>>>>> 337d99bf227b3855e648726c8d15707469872c8a
 
     ResultSet products = null;
-
-    try{
-      Statement s = dbcon.createStatement();
-      products = s.executeQuery(q);
-    } catch (SQLException e) {
-        System.err.println("Error");
-        System.exit(1);
-    }
     ResultSet highest_bid = null;
-
-    if (products == null){
-      System.out.println("No products found");
-    }
-
-    else {
-      try{
-<<<<<<< HEAD
-      while (products.next()) {
-        try {
-          Statement st = dbcon.createStatement();
-          highest_bid = st.executeQuery("select max(amount) from bidlog where auction_id = " + products.getInt(1));
-        } catch (SQLException e){
-          System.err.println("Error");
-          System.exit(1);
-        }
-=======
+      try {
         PreparedStatement pst;
         if (choice == 1){
           pst = dbcon.prepareStatement("SELECT auction_id, name, description, amount FROM Product WHERE status = 'under auction' AND auction_id IN(SELECT auction_id FROM belongsto WHERE category = ?) order by amount desc");
@@ -462,12 +425,10 @@ public class MyAuction
         products = pst.executeQuery();
         //Statement s = dbcon.createStatement();
         //products = s.executeQuery(q);
-      } catch (SQLException e) {
-          System.err.println("Error");
-          System.exit(1);
+      }catch (SQLException e){
+        System.err.println("error");
+        System.exit(1);
       }
-      ResultSet highest_bid = null;
-
       if(!products.isBeforeFirst())
       {
         System.out.println("No products found");
@@ -506,12 +467,14 @@ public class MyAuction
         System.out.println("Description: " + products.getString(3));
         System.out.println("Highest Bid: " + highest_bid.getInt(1));
       }
-    }catch(SQLException e){
-      System.err.println("error");
-      System.exit(1);
     }
-    }
+
+  } catch (SQLException e){
+    System.err.println("error");
+    System.exit(1);
   }
+}
+
 
   public List<String> getSubCategories(String parent_category){
     ResultSet subcats;
