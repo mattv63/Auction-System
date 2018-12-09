@@ -8,7 +8,7 @@ import oracle.sql.*;
 public class Driver {
 
   public static Scanner sin = new Scanner(System.in);
-  private String currentUser;
+  //private String currentUser;
   private Connection dbcon;
 
   public static void main(String[] args)
@@ -126,13 +126,13 @@ public class Driver {
       System.err.println("error");
       System.exit(1);
     }
-    currentUser = "ctest6";
+    auction.currentUser = "ctest6";
     auction.sellProduct(8);
 
     System.out.println("\nNow we will display suggestions for user ctest1. Ctest1 has one bid on auction1");
     System.out.println("Press Enter to continue");
     sin.nextLine();
-    currentUser = "ctest1";
+    auction.currentUser = "ctest1";
     auction.makeSuggestion();
 
     System.out.println("\nNow we will update the System Date. The new date will be 01.09/2019 12:12:12");
