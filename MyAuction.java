@@ -16,7 +16,7 @@ public class MyAuction
   private Connection dbcon;
   private String username;
   private String password;
-  private String currentUser;
+  public String currentUser;
   public static Scanner sin = new Scanner(System.in);
 
   public static void main(String[] args)

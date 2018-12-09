@@ -7,7 +7,6 @@ import oracle.sql.*;
 public class Driver {
 
   public static Scanner sin = new Scanner(System.in);
-  private String currentUser;
   private Connection dbcon;
 
   public static void main(String[] args)
