@@ -1,11 +1,12 @@
 Instructions:
 
 Start up:
-1. Compile with javac MyAuction.java
-2. Run with java MyAuction dbusername dbpassword
-3. Enter a 1 for Administrator or a 2 for Customer
-4. Enter a valid username and password
-5. Enter a number corresponding to a possible action
+1. Run schema.sql, trigger.sql and insert.sql in sqlplus
+2. Compile with javac MyAuction.java
+3. Run with java MyAuction dbusername dbpassword
+4. Enter a 1 for Administrator or a 2 for Customer
+5. Enter a valid username and password
+6. Enter a number corresponding to a possible action
 
 Administrator:
   New User:

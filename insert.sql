@@ -31,15 +31,10 @@ INSERT INTO category VALUES('cat3', 'cat1');
 INSERT INTO category VALUES('cat4', 'cat1');
 INSERT INTO category VALUES('cat5', 'cat2');
 
-INSERT INTO belongsto VALUES(1,'cat1');
-INSERT INTO belongsto VALUES(2,'cat1');
-INSERT INTO belongsto VALUES(3,'cat1');
-INSERT INTO belongsto VALUES(4,'cat2');
-INSERT INTO belongsto VALUES(5,'cat3');
+INSERT INTO belongsto VALUES(1,'cat3');
+INSERT INTO belongsto VALUES(2,'cat3');
+INSERT INTO belongsto VALUES(3,'cat4');
+INSERT INTO belongsto VALUES(4,'cat4');
+INSERT INTO belongsto VALUES(5,'cat5');
 
 COMMIT;
-
-select * from product;
-
-commit;
-
