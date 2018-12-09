@@ -1019,8 +1019,6 @@ public class MyAuction
     String date = "";
     String format = "mm.dd/yyyy hh:mm:ss";
     DateFormat df = new SimpleDateFormat(format);
-    ResultSet result;
-    PreparedStatement pst;
 
     while (!valid)
     {
@@ -1038,12 +1036,25 @@ public class MyAuction
       }
     }
 
+    newDate(date);
+
+    menus(1);
+
+  }
+
+  public void newDate(String date)
+  {
+
+    ResultSet result;
+    PreparedStatement pst;
+
+
     try
     {
       pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh24:mi:ss'))");
       pst.setString(1, date);
       pst.executeUpdate();
-      System.out.println("System Date successfully updated");
+      System.out.println("System Date successfully updated to " + date);
     }
     catch (SQLException e)
     {
@@ -1051,7 +1062,8 @@ public class MyAuction
       System.exit(0);
     }
 
-    menus(1);
+    return;
+
   }
 
   public void prodStats()
