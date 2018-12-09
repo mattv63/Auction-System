@@ -30,17 +30,17 @@ public class Benchmark {
     System.out.println("Press enter to continue");
     sin.nextLine();
 
-    System.out.println("Adding 20 administrators");
+    System.out.println("Adding 10 administrators");
     System.out.println("Press enter to continue");
     sin.nextLine();
     addAdministrators(auction);
 
-    System.out.println("Adding 20 Customers");
+    System.out.println("Adding 10 Customers");
     System.out.println("Press enter to continue");
     sin.nextLine();
     addCustomers(auction);
 
-    System.out.println("Adding 25 Products");
+    System.out.println("Adding 20 Products");
     System.out.println("Press enter to continue");
     sin.nextLine();
     addCats();
@@ -56,17 +56,17 @@ public class Benchmark {
     sin.nextLine();
     browseProducts(auction);
 
-    System.out.println("\nSearching Products; searching for products with \"filler\" in description 20 times");
+    System.out.println("\nSearching Products; searching for products with \"filler\" in description 10 times");
     System.out.println("Press Enter to display");
     sin.nextLine();
     findWord(auction, "%filler%");
 
-    System.out.println("\nSearching Products; searching for products with \"jawn\" in description 20 times");
+    System.out.println("\nSearching Products; searching for products with \"jawn\" in description 10 times");
     System.out.println("Press Enter to display");
     sin.nextLine();
     findWord(auction, "%jawn%");
 
-    System.out.println("\nSearching Products; searching for products with \"hello\" in description 20 times. This is not in any description");
+    System.out.println("\nSearching Products; searching for products with \"hello\" in description 10 times. This is not in any description");
     System.out.println("Press Enter to display");
     sin.nextLine();
     findWord(auction, "%hello%");
@@ -76,39 +76,39 @@ public class Benchmark {
     sin.nextLine();
     closeAuctions(auction);
 
-    System.out.println("\nDisplay suggestions for ctest1 20 times each");
+    System.out.println("\nDisplay suggestions for ctest1 10 times each");
     System.out.println("Press Enter to display");
     sin.nextLine();
     giveSuggestions(auction);
 
-    System.out.println("\nDisplay the full product inventory from admin view 20 times.");
+    System.out.println("\nDisplay the full product inventory from admin view 5 times.");
     System.out.println("Press Enter to display");
     sin.nextLine();
     displayProductsAdmin(auction);
 
-    System.out.println("\nDisplay the customer inventory of the customer you enter 20 times");
+    System.out.println("\nDisplay the customer inventory of the customer you enter 5 times");
     System.out.println("Press Enter to continue");
     sin.nextLine();
     System.out.println("\nEnter a customer's name:");
     String name = sin.nextLine();
     displayProductsCustomer(auction, name);
 
-    System.out.println("\nDisplay top five leaf catagories from the past month 20 times");
+    System.out.println("\nDisplay top five leaf catagories from the past month 5 times");
     System.out.println("Press Enter to continue");
     sin.nextLine();
     displayLeaf(auction);
 
-    System.out.println("\nDisplay top five root catagories from the past month 20 times");
+    System.out.println("\nDisplay top five root catagories from the past month 5 times");
     System.out.println("Press Enter to continue");
     sin.nextLine();
     displayRoot(auction);
 
-    System.out.println("\nDisplay top five bidders from the past month 20 times");
+    System.out.println("\nDisplay top five bidders from the past month 5 times");
     System.out.println("Press Enter to continue");
     sin.nextLine();
     displayBidders(auction);
 
-    System.out.println("\nDisplay top five buyers from the past month 20 times");
+    System.out.println("\nDisplay top five buyers from the past month 5 times");
     System.out.println("Press Enter to continue");
     sin.nextLine();
     displayBuyers(auction);
@@ -180,8 +180,9 @@ public class Benchmark {
   }
 
   private void browseProducts(MyAuction auction) {
-    for (int i = 5; i <= 10; i++){
+    for (int i = 3; i <= 5; i++){
       for (int j = 1; j <= 3; j++) {
+        System.out.println("i: " + i + " j: " + j);
         auction.productsFromCategory("cat"+i, j);
       }
     }
@@ -217,25 +218,21 @@ public class Benchmark {
         auction.putToAuction("ptest" + i, "filler description", cats1.toArray(), 5, "ctest1", 10);
       }
       else if (i >= 5 && i <= 9) {
-        auction.putToAuction("ptest" + i, "other filler description", cats2.toArray(), 6, "ctest2", 20);
+        auction.putToAuction("ptest" + i, "other filler description",cats1.toArray(), 6, "ctest2", 20);
       }
       else if (i >= 10 && i <= 14) {
-        auction.putToAuction("ptest" + i, "dont fill description", cats3.toArray(), 7, "ctest3", 30);
+        auction.putToAuction("ptest" + i, "dont fill description",cats2.toArray(), 7, "ctest3", 30);
       }
       else if (i >= 15 && i <= 19) {
-        auction.putToAuction("ptest" + i, "jawn description", cats4.toArray(), 8, "ctest4", 40);
+        auction.putToAuction("ptest" + i, "jawn description", cats2.toArray(), 8, "ctest4", 40);
       }
     }
   }
 
   private void addCats() {
-    cats1.add("cat10");
-    cats1.add("cat11");
+    cats1.add("cat3");
+    cats1.add("cat4");
     cats2.add("cat5");
-    cats4.add("cat6");
-    cats4.add("cat7");
-    cats3.add("cat8");
-    cats3.add("cat9");
   }
 
   private void addCustomers(MyAuction auction) {
