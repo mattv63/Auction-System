@@ -62,10 +62,12 @@ public class MyAuction
     if (menu == 0)
     {
       //main menu
-      System.out.println("Main Menu");
+      System.out.println("\nMain Menu");
       System.out.println("---------");
       System.out.println("1. Administrator");
       System.out.println("2. Customer");
+      System.out.println("3. Exit");
+
 
       //get input
       str = getChoice();
@@ -82,6 +84,11 @@ public class MyAuction
         System.out.println("\nCustomer Login");
         login(choice);
       }
+      else if (choice == 3)
+      {
+        System.out.print("Exit");
+        System.exit(1);
+      }
       else
       {
         System.out.println("Not a valid option. Try again.");
@@ -97,6 +104,7 @@ public class MyAuction
       System.out.println("2. Update System Date");
       System.out.println("3. Product Statistics");
       System.out.println("4. Statistics");
+      System.out.println("5. Logout");
 
       //get input
       str = getChoice();
@@ -123,10 +131,15 @@ public class MyAuction
         System.out.println("\nStatistics");
         stats();
       }
+      else if (choice == 5)
+      {
+        System.out.println("Logging out. Back to main menu");
+        menus(0);
+      }
       else
       {
         System.out.println("Not a valid option. Try again.");
-        menus(0);
+        menus(1);
       }
     }
     else if (menu == 2)
@@ -140,8 +153,7 @@ public class MyAuction
       System.out.println("4. Bid on Product");
       System.out.println("5. Sell Product");
       System.out.println("6. Suggestions");
-      System.out.println("7. Main Menu");
-      System.out.println("8. Exit");
+      System.out.println("7. Logout");
 
       //get input
       str = getChoice();
@@ -187,12 +199,8 @@ public class MyAuction
       }
       else if (choice == 7)
       {
+        System.out.println("Logging out. Back to main menu");
         menus(0);
-      }
-      else if (choice == 8)
-      {
-        System.out.println("Exit");
-        System.exit(1);
       }
       else
       {
