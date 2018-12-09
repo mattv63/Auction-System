@@ -41,6 +41,7 @@ public class MyAuction
       DriverManager.registerDriver (new oracle.jdbc.driver.OracleDriver());
       String url = "jdbc:oracle:thin:@class3.cs.pitt.edu:1521:dbclass";
       dbcon = DriverManager.getConnection(url, username, password);
+      //Runsql run = new Runsql(username, password);
     }
     catch (SQLException e)
     {
@@ -49,6 +50,7 @@ public class MyAuction
     }
 
   }
+
 
   //displays the menus
   public void menus(int menu)
@@ -262,8 +264,10 @@ public class MyAuction
     str = getChoice();
     int price = Integer.parseInt(str);
 
-    int auction_id = putToAuction(name, description, cats_copy.toArray(), days, currentUser, price);
-    System.out.println("Auction was created. Your auction ID is " + auction_id + "");
+    putToAuction(name, description, cats_copy.toArray(), days, currentUser, price);
+
+    //int auction_id = putToAuction(name, description, cats_copy.toArray(), days, currentUser, price);
+    //System.out.println("Auction was created. Your auction ID is " + auction_id + "");
 
 
   }
@@ -280,7 +284,10 @@ public class MyAuction
       auction.setString(5, cuser);
       auction.setInt(6, price);
       auction.execute();
-      return auction.getInt(7);
+
+      System.out.println("Auction was created. Your auction ID is " + auction.getInt(7) + "\n");
+      return 0;
+      //return auction.getInt(7);
     } catch (SQLException e){
       System.err.println("Error");
       System.exit(1);
@@ -742,7 +749,7 @@ public class MyAuction
 
       dbcon.commit();
       dbcon.setAutoCommit(true);
-      System.out.println("\nBid successful!") ;
+      System.out.println("\nBid on product " + a_id + " was successful!") ;
 
 
     } catch (SQLException e) {
@@ -816,6 +823,7 @@ public class MyAuction
       else
       {
         System.out.println("Not a valid username, password combination");
+        menus(0);
       }
     }
     catch (SQLException e)
@@ -859,6 +867,7 @@ public class MyAuction
       else
       {
         System.out.println("Not a valid username, password combination");
+        menus(0);
       }
     }
     catch (SQLException e)
@@ -911,7 +920,6 @@ public class MyAuction
 
       }
 
-    System.out.println("Successfully added User");
     menus(1);
   }
   public void addAdministrator(String user, String pass, String name, String addr, String eaddr){
@@ -956,6 +964,10 @@ public class MyAuction
       pst.setString(4, addr);
       pst.setString(5, eaddr);
       result = pst.executeQuery();
+
+      System.out.println("User " + user + " has been successfully added as an administrator\n");
+
+
     }catch(SQLException e){
       System.err.println("error");
       System.exit(1);
@@ -1005,10 +1017,14 @@ public class MyAuction
       pst.setString(4, addr);
       pst.setString(5, eaddr);
       result = pst.executeQuery();
+
+      System.out.println("User " + user + " has been successfully added as an customer\n");
+
+
     }catch(SQLException e){
       System.out.println("error");
       System.exit(1);
-  }
+    }
 
   }
 
@@ -1048,13 +1064,12 @@ public class MyAuction
     ResultSet result;
     PreparedStatement pst;
 
-
     try
     {
       pst = dbcon.prepareStatement("UPDATE ourSysDATE SET c_date = (to_date(?,'mm.dd/yyyy hh24:mi:ss'))");
       pst.setString(1, date);
       pst.executeUpdate();
-      System.out.println("System Date successfully updated to " + date);
+      System.out.println("System Date successfully updated to " + date + "\n");
     }
     catch (SQLException e)
     {
@@ -1156,8 +1171,8 @@ public class MyAuction
   {
     System.out.println("\nSelect option");
     System.out.println("-------------");
-    System.out.println("1. Top Leaf Categories");
-    System.out.println("2. Top Root Categories");
+    System.out.println("1. Most Products Sold - Leaf Categories");
+    System.out.println("2. Most Products Sold - Root Categories");
     System.out.println("3. Top Bidders");
     System.out.println("4. Top Buyers");
 
@@ -1208,7 +1223,7 @@ public class MyAuction
       pst.setInt(3, k);
       result = pst.executeQuery();
 
-      System.out.println("Top " + k + " Highest Volume Leaf Categories");
+      System.out.println("Top " + k + " Most Products Sold - Leaf Categories");
       System.out.println("------------------------------------");
       System.out.print("CATEGORY            ");
       System.out.print("NUMBER OF PRODUCTS  ");
@@ -1239,7 +1254,7 @@ public class MyAuction
       pst.setInt(2, months);
       pst.setInt(3, k);
       result = pst.executeQuery();
-      System.out.println("Top " + k + " Highest Volume Root Categories");
+      System.out.println("Top " + k + " Most Products Sold - Root Categories");
       System.out.println("------------------------------------");
       System.out.print("CATEGORY            ");
       System.out.print("NUMBER OF PRODUCTS  ");

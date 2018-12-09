@@ -1,3 +1,4 @@
+//Driver.java
 import java.util.*;
 import java.io.*;
 import java.sql.*;
@@ -52,7 +53,7 @@ public class Driver {
     cats1.add("cat4");
     cats2.add("cat5");
 
-    System.out.println("Adding Products");
+    System.out.println("Adding Products To Auction");
     System.out.println("Press enter to continue");
     sin.nextLine();
     auction.putToAuction("ptest1", "filler description", cats1.toArray(), 5, "ctest1", 20);
@@ -133,6 +134,11 @@ public class Driver {
     sin.nextLine();
     currentUser = "ctest1";
     auction.makeSuggestion();
+
+    System.out.println("\nNow we will update the System Date. The new date will be 01.09/2019 12:12:12");
+    System.out.println("Press Enter to continue");
+    sin.nextLine();
+    auction.newDate("01.09/2019 12:12:12");
 
     System.out.println("\nWe will now display the full product inventory from an admin view.");
     System.out.println("Press Enter to display");
