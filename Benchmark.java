@@ -21,7 +21,7 @@ public class Benchmark {
 
   public static void main(String[] args)
   {
-    Driver driver = new Driver(args);
+    Benchmark driver = new Benchmark(args);
   }
 
   public Benchmark(String[] args)
