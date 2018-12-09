@@ -141,7 +141,7 @@ public class Driver {
     System.out.println("\nWe will now display the a customer's inventory. Enter a customer's name when prompted to");
     System.out.println("Press Enter to continue");
     sin.nextLine();
-    System.out.println("\nEnter a customer's name:")
+    System.out.println("\nEnter a customer's name:");
     String name = sin.nextLine();
     auction.customerInventory(name);
 

@@ -95,7 +95,7 @@ public class Benchmark {
     System.out.println("\nDisplay the customer inventory of the customer you enter 1000");
     System.out.println("Press Enter to continue");
     sin.nextLine();
-    System.out.println("\nEnter a customer's name:")
+    System.out.println("\nEnter a customer's name:");
     String name = sin.nextLine();
     displayProductsCustomer(auction, name);
 
@@ -338,19 +338,5 @@ public class Benchmark {
     for (int i = 0; i < 1000; i++){
       auction.addAdministrator("atest" + i, "test" + i, "atest"+ i, "testaddr" + i, "atest" + i + "@test.com");
     }
-  }
-
-  public void driverTest(MyAuction auction){
-
-
-    System.out.println("\nWe will now display the top 5 most active bidders");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    auction.topBid(1, 5);
-
-    System.out.println("\nWe will now display the top 5 most active buyers");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    auction.topBuy(1, 5);
   }
 }
