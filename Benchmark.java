@@ -1,3 +1,8 @@
+//cs1555 final project
+//Anthony Baionno
+//James Mansmann
+//Matthew Viego
+
 import java.util.*;
 import java.io.*;
 import java.sql.*;

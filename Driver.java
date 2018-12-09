@@ -1,3 +1,8 @@
+//cs1555 final project
+//Anthony Baionno
+//James Mansmann
+//Matthew Viego
+
 import java.util.*;
 import java.io.*;
 import java.sql.*;
@@ -132,7 +137,7 @@ public class Driver {
     sin.nextLine();
     auction.currentUser = "ctest1";
     auction.makeSuggestion();
-    
+
     System.out.println("\nNow we will update the System Date. The new date will be 01.09/2019 12:12:12");
     System.out.println("Press Enter to continue");
     sin.nextLine();

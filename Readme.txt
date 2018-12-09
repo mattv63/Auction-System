@@ -85,7 +85,3 @@ Benchmark.java
 3. Run with java Benchmark dbusername dbpassword
 4. Press enter to move through the program
 5. When prompted, enter a name or number to make a selection
-
-
-
-
