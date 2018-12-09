@@ -22,6 +22,11 @@ public class MyAuction
   public static void main(String[] args)
   {
     MyAuction auction = new MyAuction(args[0], args[1]);
+    auction.menus(0);
+  }
+
+  public Connection getConnection() {
+    return dbcon;
   }
 
   public MyAuction(String firstArg, String secondArg)
@@ -43,7 +48,6 @@ public class MyAuction
       System.exit(0);
     }
 
-    menus(menu);
   }
 
   //displays the menus
@@ -60,7 +64,6 @@ public class MyAuction
       System.out.println("---------");
       System.out.println("1. Administrator");
       System.out.println("2. Customer");
-      System.out.println("3. Driver Test");
 
       //get input
       str = getChoice();
@@ -76,9 +79,6 @@ public class MyAuction
       {
         System.out.println("\nCustomer Login");
         login(choice);
-      }
-      else if (choice == 3){
-        driverTest();
       }
       else
       {
@@ -1306,151 +1306,4 @@ public class MyAuction
       System.exit(0);
     }
   }
-
-
-
-  public void driverTest(){
-    System.out.println("Driver test will now begin. Make sure that schema.sql, trigger.sql and insert.sql have both been run.");
-    System.out.println("Press enter to continue");
-    sin.nextLine();
-
-    System.out.println("Adding an administrator");
-    System.out.println("Press enter to continue");
-    sin.nextLine();
-    addAdministrator("atest1", "test", "atest1", "testtesttest", "test@test.com");
-
-    System.out.println("Adding Customers");
-    System.out.println("Press enter to continue");
-    sin.nextLine();
-    addCustomer("ctest1", "test", "ctest1", "testetstest", "test@test.com");
-    addCustomer("ctest2", "test", "ctest2", "testetstest", "test@test.com");
-    addCustomer("ctest3", "test", "ctest3", "testetstest", "test@test.com");
-    addCustomer("ctest4", "test", "ctest4", "testetstest", "test@test.com");
-    addCustomer("ctest5", "test", "ctest5", "testetstest", "test@test.com");
-    addCustomer("ctest6", "test", "ctest6", "testetstest", "test@test.com");
-    addCustomer("ctest7", "test", "ctest7", "testetstest", "test@test.com");
-    addCustomer("ctest8", "test", "ctest8", "testetstest", "test@test.com");
-    addCustomer("ctest9", "test", "ctest9", "testetstest", "test@test.com");
-
-    List<String> cats1 = new ArrayList<String>();
-    List<String> cats2 = new ArrayList<String>();
-
-    cats1.add("cat3");
-    cats1.add("cat4");
-    cats2.add("cat5");
-
-    System.out.println("Adding Products");
-    System.out.println("Press enter to continue");
-    sin.nextLine();
-    putToAuction("ptest1", "filler description", cats1.toArray(), 5, "ctest1", 20);
-    putToAuction("ptest2", "filler description", cats1.toArray(), 5, "ctest2", 30);
-    putToAuction("ptest3", "filler description", cats1.toArray(), 5, "ctest2", 40);
-    putToAuction("ptest4", "filler description wow", cats1.toArray(), 5, "ctest3", 30);
-    putToAuction("ptest5", "filler description", cats1.toArray(), 5, "ctest5", 20);
-    putToAuction("ptest6", "filler description", cats2.toArray(), 5, "ctest6", 10);
-    putToAuction("ptest7", "filler description", cats2.toArray(), 5, "ctest6", 25);
-    putToAuction("ptest8", "filler description", cats2.toArray(), 5, "ctest6", 5);
-    putToAuction("ptest9", "filler description", cats2.toArray(), 5, "ctest9", 100);
-
-    System.out.println("Users will now bid on products");
-    System.out.println("Press enter to continue");
-    sin.nextLine();
-    bid(1, "ctest1", 100);
-    bid(2, "ctest2", 120);
-    bid(3, "ctest3", 80);
-    bid(4, "ctest4", 120);
-    bid(5, "ctest1", 100);
-    bid(6, "ctest2", 40);
-    bid(7, "ctest5", 60);
-    bid(8, "ctest6", 80);
-    bid(1, "ctest2", 120);
-    bid(2, "ctest6", 200);
-
-    System.out.println("\nBrowsing Products in category 3 in descending price order");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    productsFromCategory("cat3", 1);
-
-    System.out.println("\nBrowsing Products in category 5 in ascending price order");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    productsFromCategory("cat5", 2);
-
-    System.out.println("\nBrowsing Products in category 4 in alphabetical order");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    productsFromCategory("cat4", 3);
-
-    System.out.println("\nBrowsing Products in category 10 in ascending price order. (There are no products in this category)");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    productsFromCategory("cat10", 1);
-
-    System.out.println("\nWe will now search for product by one or two keywords");
-    System.out.println("Searching for word 'filler'");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    findProducts("%filler%", "%%");
-
-    System.out.println("Searching for word 'wow'");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    findProducts("%wow%", "%%");
-
-    System.out.println("Searching for word 'hello'. This word is not in any description");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    findProducts("%hello%", "%%");
-
-    System.out.println("\nWe will now manually move Auction 8 status to close and have the user ctest6 sell their product. When asked which product to sell, press 1");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    try{
-      PreparedStatement ps = dbcon.prepareStatement("update product set status = 'closed' where auction_id = 8");
-      ps.executeQuery();
-    } catch(SQLException e){
-      System.err.println("error");
-      System.exit(1);
-    }
-    currentUser = "ctest6";
-    sellProduct(8);
-
-    System.out.println("\nNow we will display suggestions for user ctest1. Ctest1 has one bid on auction1");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    currentUser = "ctest1";
-    makeSuggestion();
-
-    System.out.println("\nWe will now display the full product inventory from an admin view.");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    fullInventory();
-
-    System.out.println("\nWe will now display the a customer's inventory. Enter a customer's name when prompted to");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    customerInventory();
-
-    System.out.println("\nWe will now display the top 5 leaf categories");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    topLeaf(1, 5);
-
-    System.out.println("\nWe will now display the top 5 root categories");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    topRoot(1, 5);
-
-    System.out.println("\nWe will now display the top 5 most active bidders");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    topBid(1, 5);
-
-    System.out.println("\nWe will now display the top 5 most active buyers");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    topBuy(1, 5);
-
-  }
-
 }
