@@ -1,5 +1,7 @@
 Instructions:
 
+MyAuction.java
+
 Start up:
 1. Run schema.sql, trigger.sql and insert.sql in sqlplus
 2. Compile with javac MyAuction.java
@@ -68,3 +70,22 @@ Customer:
     1. Select 6 from customer menu
     2. user will be shown suggestions for products to bid on based on similar users' bids
     
+
+Driver.java
+1. Run schema.sql, trigger.sql and insert.sql in sqlplus
+2. Compile with javac Driver.java
+3. Run with java Driver dbusername dbpassword
+4. Press enter to move through the program
+5. When prompted, enter a name or number to make a selection
+
+
+Benchmark.java
+1. Run schema.sql, trigger.sql and insert.sql in sqlplus
+2. Compile with javac Benchmark.java
+3. Run with java Benchmark dbusername dbpassword
+4. Press enter to move through the program
+5. When prompted, enter a name or number to make a selection
+
+
+
+
