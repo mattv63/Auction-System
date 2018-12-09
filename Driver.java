@@ -124,13 +124,13 @@ public class Driver {
       System.err.println("error");
       System.exit(1);
     }
-    currentUser = "ctest6";
+    auction.currentUser = "ctest6";
     auction.sellProduct(8);
 
     System.out.println("\nNow we will display suggestions for user ctest1. Ctest1 has one bid on auction1");
     System.out.println("Press Enter to continue");
     sin.nextLine();
-    currentUser = "ctest1";
+    auction.currentUser = "ctest1";
     auction.makeSuggestion();
 
     System.out.println("\nWe will now display the full product inventory from an admin view.");

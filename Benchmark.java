@@ -28,11 +28,11 @@ public class Benchmark {
   {
     MyAuction auction = new MyAuction(args[0], args[1]);
     dbcon = auction.getConnection();
-    driverTest(auction);
+    benchmarkTest(auction);
   }
 
   public void benchmarkTest(MyAuction auction){
-    System.out.println("Beginning Benchmark.")
+    System.out.println("Beginning Benchmark.");
     System.out.println("Press enter to continue");
     sin.nextLine();
 
@@ -201,7 +201,7 @@ public class Benchmark {
   private void browseProducts(MyAuction auction) {
     for (int i = 11; i < 111; i++){
       for (int j = 1; j <= 3; j++) {
-        auction.productsFromCategory("cats"+i, j)
+        auction.productsFromCategory("cats"+i, j);
       }
     }
   }
@@ -212,47 +212,47 @@ public class Benchmark {
         auction.bid(i, "ctest" + i, i+10);
       }
     }
-    for(int i = 101, i <= 200; i++) {
+    for(int i = 101; i <= 200; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 201, i <= 300; i++) {
+    for(int i = 201; i <= 300; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 301, i <= 400; i++) {
+    for(int i = 301; i <= 400; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 401, i <= 500; i++) {
+    for(int i = 401; i <= 500; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 501, i <= 600; i++) {
+    for(int i = 501; i <= 600; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 601, i <= 700; i++) {
+    for(int i = 601; i <= 700; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 701, i <= 800; i++) {
+    for(int i = 701; i <= 800; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 801, i <= 900; i++) {
+    for(int i = 801; i <= 900; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
     }
-    for(int i = 901, i < 1000; i++) {
+    for(int i = 901; i < 1000; i++) {
       for (int j = 1; j <= 10; j++) {
         auction.bid(i, "ctest" + i, i);
       }
