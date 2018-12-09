@@ -1108,20 +1108,25 @@ public class MyAuction
       else if (inv == 2)
       {
         //specific customer
-        customerInventory();
+        customerInventorySetup();
       }
 
       menus(1);
     }
 
-  public void customerInventory(){
+
+  public void customerInventorySetup() {
+    System.out.println("Enter the Customer's username");
+    String seller = getChoice();
+    customerInventory(seller);
+  }
+
+  public void customerInventory(String seller){
     try{
       ResultSet result = null;
       Statement st;
       PreparedStatement pst;
 
-      System.out.println("Enter the Customer's username");
-      String seller = getChoice();
       pst = dbcon.prepareStatement("SELECT * FROM (SELECT p.name, p.status, b.amount, b.bidder FROM product p, bidlog b WHERE p.auction_id = b.auction_id AND p.amount = b.amount AND p.status != 'sold' AND p.seller = ? UNION SELECT p.name, p.status, p.amount, p.buyer FROM product p WHERE p.status = 'sold' AND p.seller = ? UNION SELECT p.name, p.status, p.amount, p.buyer FROM product p WHERE p.auction_id NOT IN (SELECT b.auction_id FROM bidlog b) AND p.seller = ?) t ORDER BY t.name");
       pst.setString(1, seller);
       pst.setString(2, seller);

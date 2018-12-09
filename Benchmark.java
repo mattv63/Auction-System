@@ -80,10 +80,90 @@ public class Benchmark {
     System.out.println("\nNow going to close all of the auctions posted by ctest1 and ctest5");
     System.out.println("Press Enter to display");
     sin.nextLine();
-    closeAuctions();
+    closeAuctions(auction);
+
+    System.out.println("\nDisplay suggestions for each customer 100 times each");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    giveSuggestions(auction);
+
+    System.out.println("\nDisplay the full product inventory from admin view 1000 times.");
+    System.out.println("Press Enter to display");
+    sin.nextLine();
+    displayProductsAdmin(auction);
+
+    System.out.println("\nDisplay the customer inventory of the customer you enter 1000");
+    System.out.println("Press Enter to continue");
+    sin.nextLine();
+    System.out.println("\nEnter a customer's name:")
+    String name = sin.nextLine();
+    displayProductsCustomer(auction, name);
+
+    System.out.println("\nDisplay top five leaf catagories from the past month 1000 times");
+    System.out.println("Press Enter to continue");
+    sin.nextLine();
+    displayLeaf(auction);
+
+    System.out.println("\nDisplay top five root catagories from the past month 1000 times");
+    System.out.println("Press Enter to continue");
+    sin.nextLine();
+    displayRoot(auction);
+
+    System.out.println("\nDisplay top five bidders from the past month 1000 times");
+    System.out.println("Press Enter to continue");
+    sin.nextLine();
+    displayBidders(auction);
+
+    System.out.println("\nDisplay top five buyers from the past month 1000 times");
+    System.out.println("Press Enter to continue");
+    sin.nextLine();
+    displayBuyers(auction);
   }
 
-  private void closeAuctions() {
+  private void displayBuyers(MyAuction auction) {
+    for (int i = 0; i < 1000; i++) {
+      auction.topBuy(1, 5);
+    }
+  }
+
+  private void displayBidders(MyAuction auction) {
+    for (int i = 0; i < 1000; i++) {
+      auction.topBid(1, 5);
+    }
+  }
+
+  private void displayLeaf(MyAuction auction) {
+    for (int i = 0; i < 1000; i++) {
+      auction.topLeaf(1, 5);
+    }
+  }
+
+  private void displayRoot(MyAuction auction) {
+    for (int i = 0; i < 1000; i++) {
+      auction.topRoot(1, 5);
+    }
+  }
+  private void displayProductsCustomer(MyAuction auction, String name) {
+    for (int i = 0; i < 1000; i++) {
+      auction.customerInventory(name);
+    }
+  }
+
+  private void displayProductsAdmin(MyAuction auction) {
+    for (int i = 0; i < 1000; i++) {
+      auction.fullInventory();
+    }
+  }
+
+  private void giveSuggestions(MyAuction auction){
+    for (int i = 1; i <= 10; i++) {
+      auction.currentUser = "ctest" + i;
+      for (int j = 1; j <= 100; j++) {
+        auction.makeSuggestion();
+      }
+    }
+  }
+  private void closeAuctions(MyAuction auction) {
     auction.currentUser = "ctest1";
     for (int i = 0; i < 100; i++) {
       try{
@@ -261,44 +341,7 @@ public class Benchmark {
   }
 
   public void driverTest(MyAuction auction){
-    System.out.println("\nWe will now manually move Auction 8 status to close and have the user ctest6 sell their product. When asked which product to sell, press 1");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    try{
-      PreparedStatement ps = dbcon.prepareStatement("update product set status = 'closed' where auction_id = 8");
-      ps.executeQuery();
-    } catch(SQLException e){
-      System.err.println("error");
-      System.exit(1);
-    }
-    currentUser = "ctest6";
-    auction.sellProduct(8);
 
-    System.out.println("\nNow we will display suggestions for user ctest1. Ctest1 has one bid on auction1");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    currentUser = "ctest1";
-    auction.makeSuggestion();
-
-    System.out.println("\nWe will now display the full product inventory from an admin view.");
-    System.out.println("Press Enter to display");
-    sin.nextLine();
-    auction.fullInventory();
-
-    System.out.println("\nWe will now display the a customer's inventory. Enter a customer's name when prompted to");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    auction.customerInventory();
-
-    System.out.println("\nWe will now display the top 5 leaf categories");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    auction.topLeaf(1, 5);
-
-    System.out.println("\nWe will now display the top 5 root categories");
-    System.out.println("Press Enter to continue");
-    sin.nextLine();
-    auction.topRoot(1, 5);
 
     System.out.println("\nWe will now display the top 5 most active bidders");
     System.out.println("Press Enter to continue");
