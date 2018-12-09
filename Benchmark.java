@@ -79,7 +79,7 @@ public class Benchmark {
     System.out.println("\nDisplay suggestions for ctest1 20 times each");
     System.out.println("Press Enter to display");
     sin.nextLine();
-    //giveSuggestions(auction);
+    giveSuggestions(auction);
 
     System.out.println("\nDisplay the full product inventory from admin view 20 times.");
     System.out.println("Press Enter to display");
@@ -115,50 +115,50 @@ public class Benchmark {
   }
 
   private void displayBuyers(MyAuction auction) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       auction.topBuy(1, 5);
     }
   }
 
   private void displayBidders(MyAuction auction) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       auction.topBid(1, 5);
     }
   }
 
   private void displayLeaf(MyAuction auction) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       auction.topLeaf(1, 5);
     }
   }
 
   private void displayRoot(MyAuction auction) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       auction.topRoot(1, 5);
     }
   }
   private void displayProductsCustomer(MyAuction auction, String name) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       System.out.println(i);
       auction.customerInventory(name);
     }
   }
 
   private void displayProductsAdmin(MyAuction auction) {
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 5; i++) {
       System.out.println(i);
       auction.fullInventory();
     }
   }
 
   private void giveSuggestions(MyAuction auction){
-      for (int j = 1; j <= 20; j++) {
+      for (int j = 1; j <= 5; j++) {
         System.out.println(j);
         auction.makeSuggestion();
       }
   }
   private void closeAuctions(MyAuction auction) {
-    auction.currentUser = "ctest1";
+    auction.currentUser = "ctest2";
     for (int i = 1; i <= 4; i++) {
       try{
         PreparedStatement ps = dbcon.prepareStatement("update product set status = 'closed' where auction_id = " + i);
@@ -180,9 +180,9 @@ public class Benchmark {
   }
 
   private void browseProducts(MyAuction auction) {
-    for (int i = 5; i < 30; i++){
+    for (int i = 5; i <= 10; i++){
       for (int j = 1; j <= 3; j++) {
-        auction.productsFromCategory("cats"+i, j);
+        auction.productsFromCategory("cat"+i, j);
       }
     }
   }
@@ -229,28 +229,23 @@ public class Benchmark {
   }
 
   private void addCats() {
-    for (int i = 0; i < 5; i++){
-      cats1.add("cats"+(i+5));
-    }
-    for (int i = 0; i < 5; i++){
-      cats2.add("cats"+(i+10));
-    }
-    for (int i = 0; i < 5; i++){
-      cats3.add("cats"+(i+15));
-    }
-    for (int i = 0; i < 5; i++){
-      cats4.add("cats"+(i+20));
-    }
+    cats1.add("cat10");
+    cats1.add("cat11");
+    cats2.add("cat5");
+    cats4.add("cat6");
+    cats4.add("cat7");
+    cats3.add("cat8");
+    cats3.add("cat9");
   }
 
   private void addCustomers(MyAuction auction) {
-    for (int i = 0; i < 20; i++){
+    for (int i = 0; i < 10; i++){
       auction.addCustomer("ctest" + i, "test" + i, "ctest"+ i, "testaddr" + i, "ctest" + i + "@test.com");
     }
   }
 
   private void addAdministrators(MyAuction auction) {
-    for (int i = 0; i < 20; i++){
+    for (int i = 0; i < 10; i++){
       auction.addAdministrator("atest" + i, "test" + i, "atest"+ i, "testaddr" + i, "atest" + i + "@test.com");
     }
   }
