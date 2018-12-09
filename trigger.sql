@@ -33,7 +33,7 @@ begin
     pSell_date := pStart_date + pNumber_of_days; -- added so sell date will be end of auction date
     
     insert into Product(auction_id, name, description, seller, start_date, min_price, number_of_days, status, buyer, sell_date, amount)
-    values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'under auction', null, pSell_date, null);
+    values(pAuction_ID, pName, pDescription, pSeller, pStart_date, pMin_price, pNumber_of_days, 'under auction', null, pSell_date, pMin_price);
     
     -- checks if category is a leaf and then inserts into belongsto table
     for i in 1..pCategories.count loop
